@@ -1,0 +1,44 @@
+plugins {
+    id 'kotlin'
+    id "com.github.johnrengelman.shadow"
+}
+
+group 'web-api'
+version '0.9'
+apply plugin: 'kotlin'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compile "io.vertx:vertx-core:$vertx_version"
+    compile "io.vertx:vertx-web:$vertx_version"
+    compile "com.google.inject:guice:$guice_version"
+    compile "mysql:mysql-connector-java:$mysql_connector_version"
+    compile "org.jdbi:jdbi3-core:$jdbi3_version"
+    compile "org.jdbi:jdbi3-kotlin-sqlobject:$jdbi3_version"
+    compile "com.zaxxer:HikariCP:$hikari_version"
+    compile "org.apache.logging.log4j:log4j-api:$log4j_version"
+    compile "org.apache.logging.log4j:log4j-core:$log4j_version"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+shadowJar {
+    version = '0.9-SNAPSHOT'
+}
+
+jar {
+    manifest {
+        attributes('Main-Class': 'io.samuelagesilas.NBAFinalsApiServerKt')
+    }
+}
