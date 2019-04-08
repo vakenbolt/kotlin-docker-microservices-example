@@ -12,13 +12,12 @@ fun main() {
                                         EndpointsModule(),
                                         HikariModule(),
                                         HttpServerModule(),
+                                        JacksonModule(),
                                         JdbiModule(),
                                         ServerConfigModule(serverConfigPath))
     val nbaFinalsApiServer = injector.getInstance(NBAFinalsApiVerticle::class.java)
-    with (Vertx.vertx()) {
+    with(Vertx.vertx()) {
         Runtime.getRuntime().addShutdownHook(ShutdownVerticle(nbaFinalsApiServer, this))
         this.deployVerticle(nbaFinalsApiServer)
-
     }
 }
-

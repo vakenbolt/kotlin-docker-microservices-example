@@ -8,13 +8,10 @@ import javax.sql.DataSource
 
 class JdbiModule: AbstractModule() {
 
-    init {
-    }
-
     @Provides
     fun providesJdbi(dataSource: DataSource): Jdbi {
         val jdbi = Jdbi.create(dataSource)
-        jdbi.installPlugin(SqlObjectPlugin())
+        jdbi.installPlugins().installPlugin(SqlObjectPlugin())
         return jdbi
     }
 }

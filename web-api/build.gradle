@@ -22,6 +22,10 @@ dependencies {
     compile "org.jdbi:jdbi3-core:$jdbi3_version"
     compile "org.jdbi:jdbi3-kotlin-sqlobject:$jdbi3_version"
     compile "com.zaxxer:HikariCP:$hikari_version"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
+    compile "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
     compile "org.apache.logging.log4j:log4j-api:$log4j_version"
     compile "org.apache.logging.log4j:log4j-core:$log4j_version"
 

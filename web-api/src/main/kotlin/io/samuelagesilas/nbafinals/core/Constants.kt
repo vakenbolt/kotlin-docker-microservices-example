@@ -13,8 +13,19 @@ object ServerConfigPropertyKeys {
 }
 
 object EndpointRoutingPaths {
-    object HealthCheck {
-        private const val HEALTH_CHECK: String = "/health_check"
-        const val MYSQL: String = "$HEALTH_CHECK/mysql"
+    const val HEALTH_CHECK: String = "/health_check"
+    const val YEARS: String = "/years"
+
+    object Teams {
+        const val TEAMS: String = "/teams"
+        const val GAMES: String = "/games/:year"
+        const val WINS: String = "/games/:year/wins"
+        const val LOSSES: String = "/games/:year/losses"
+        const val HOME_GAMES: String = "/games/:year/home"
+        const val AWAY_GAMES: String = "/games/:year/away"
     }
+}
+
+object PathParameters {
+    const val YEAR = "year"
 }
