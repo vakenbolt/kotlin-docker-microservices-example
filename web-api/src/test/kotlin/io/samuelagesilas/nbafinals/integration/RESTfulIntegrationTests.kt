@@ -5,21 +5,25 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import io.restassured.RestAssured.given
+import io.samuelagesilas.nbafinals.core.Paths
 import io.samuelagesilas.nbafinals.dao.ChampionsModel
+import io.samuelagesilas.nbafinals.endpoints.TeamRequest
+import io.samuelagesilas.nbafinals.endpoints.TeamsResponse
+import io.samuelagesilas.nbafinals.endpoints.YearsResponse
 
 class RESTfulIntegrationTests {
-
 
     @Test
     fun `test games-year`() {
         val resultStr = given()
-            .get("http://localhost:8080/games/1980")
+            .get(Paths.Games.GAMES.replace(":year", "1980"))
             .then()
+            .statusCode(200)
             .extract()
             .body()
             .asString()
-        val a: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
-        val resultJson: List<ChampionsModel> = jacksonObjectMapper().readValue<List<ChampionsModel>>(resultStr, a)
+        val t: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
+        val resultJson: List<ChampionsModel> = jacksonObjectMapper().readValue<List<ChampionsModel>>(resultStr, t)
         with(resultJson[0]) {
             assertEquals(1980, this.year)
             assertEquals("Lakers", this.team)
@@ -71,5 +75,149 @@ class RESTfulIntegrationTests {
         assertEquals(false, resultJson[3].home)
         assertEquals(true, resultJson[4].home)
         assertEquals(false, resultJson[5].home)
+    }
+
+    @Test
+    fun `test games-year-wins`() {
+        val resultStr = given()
+            .get(Paths.Games.WINS.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        println(resultStr)
+    }
+
+    @Test
+    fun `test games-year-losses`() {
+        val resultStr = given()
+            .get(Paths.Games.LOSSES.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        println(resultStr)
+    }
+
+    @Test
+    fun `test games-year-home`() {
+        val resultStr = given()
+            .get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        println(resultStr)
+    }
+
+    @Test
+    fun `test games-year-away`() {
+        val resultStr = given()
+            .get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        println(resultStr)
+    }
+
+    @Test
+    fun `test healthcheck`() {
+        given()
+            .get(Paths.healthCheck)
+            .then()
+            .statusCode(200)
+    }
+
+    @Test
+    fun `test getYears`() {
+        val resultStr = given()
+            .get(Paths.getYears)
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        val t: TypeReference<YearsResponse> = object : TypeReference<YearsResponse>() {}
+        val resultJson: YearsResponse = jacksonObjectMapper().readValue<YearsResponse>(resultStr, t)
+        with(resultJson.years) {
+            assertEquals(1980, this[0])
+            assertEquals(1985, this[5])
+            assertEquals(1990, this[10])
+            assertEquals(1995, this[15])
+            assertEquals(2000, this[20])
+            assertEquals(2005, this[25])
+            assertEquals(2010, this[30])
+            assertEquals(2015, this[35])
+            assertEquals(2018, this[38])
+        }
+    }
+
+    @Test
+    fun `test getTeams`() {
+        val resultStr = given()
+            .get(Paths.getTeams)
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        val t: TypeReference<TeamsResponse> = object : TypeReference<TeamsResponse>() {}
+        val resultJson: TeamsResponse = jacksonObjectMapper().readValue<TeamsResponse>(resultStr, t)
+        with(resultJson.teams) {
+            assertEquals("Bulls", this[0])
+            assertEquals("Cavaliers", this[1])
+            assertEquals("Celtics", this[2])
+            assertEquals("Heat", this[3])
+            assertEquals("Lakers", this[4])
+            assertEquals("Mavericks", this[5])
+            assertEquals("Pistons", this[6])
+            assertEquals("Rockets", this[7])
+            assertEquals("Sixers", this[8])
+            assertEquals("Spurs", this[9])
+            assertEquals("Warriors", this[10])
+        }
+    }
+
+
+    @Test
+    fun `test getGamesByTeam with missing payload`() {
+        val resultStr = given()
+            .get(Paths.getGamesByTeam)
+            .then()
+            .statusCode(500)
+    }
+
+//    @Test
+//    fun `test getGamesByTeam with team not in champions table`() {
+//        val resultStr = given()
+//            .body(TeamRequest("Space Jams"))
+//            .get(Paths.getGamesByTeam)
+//            .then()
+//            .statusCode(500)
+//    }
+
+    @Test
+    fun `test getGamesByTeam`() {
+        val resultStr = given()
+            .body(TeamRequest("Cavaliers"))
+            .get(Paths.getGamesByTeam)
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        val t: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
+        val resultJson: List<ChampionsModel> = jacksonObjectMapper().readValue<List<ChampionsModel>>(resultStr, t)
+        assertEquals(7, resultJson.size)
+        resultJson.forEachIndexed { index, championsModel ->
+            assertEquals("Cavaliers", championsModel.team)
+            assertEquals(index + 1, championsModel.game)
+            assertEquals(240, championsModel.mp)
+        }
     }
 }
