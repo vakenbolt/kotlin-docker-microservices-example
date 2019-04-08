@@ -4,6 +4,7 @@ import io.samuelagesilas.nbafinals.core.ServerConfigPropertyKeys
 import io.vertx.core.*
 import io.vertx.core.http.HttpServer
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.BodyHandler
 import org.apache.logging.log4j.LogManager
 import javax.inject.Inject
 import javax.inject.Named
@@ -17,7 +18,6 @@ class NBAFinalsApiVerticle @Inject constructor(@Named(ServerConfigPropertyKeys.P
     private var logger = LogManager.getLogger()
 
     override fun start(startFuture: Future<Void>?) {
-        this.httpRouter.route("/").blockingHandler { ctx -> ctx.response().end() }
         this.httpServer
                 .requestHandler(this.httpRouter)
                 .listen(port) { res: AsyncResult<HttpServer> ->
@@ -32,6 +32,7 @@ class NBAFinalsApiVerticle @Inject constructor(@Named(ServerConfigPropertyKeys.P
                         }
                     }
                 }
+        this.httpRouter.route("/").blockingHandler { ctx -> ctx.response().end() }
     }
 
     override fun stop(stopFuture: Future<Void>?) {
