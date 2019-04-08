@@ -11,26 +11,3 @@ object ServerConfigPropertyKeys {
     const val MYSQL_PASSWORD = "db_password"
     const val MYSQL_DATABASE = "db_database"
 }
-
-object EndpointRoutingPaths {
-    const val HEALTH_CHECK: String = "/health_check"
-    const val YEARS: String = "/years"
-    const val TEAMS: String = "/teams"
-
-    object Games {
-        //REST
-        const val GAMES: String = "/games/:year"
-        const val WINS: String = "/games/:year/wins"
-        const val LOSSES: String = "/games/:year/losses"
-        const val HOME_GAMES: String = "/games/:year/home"
-        const val AWAY_GAMES: String = "/games/:year/away"
-
-        //RPC
-        const val getGamesByTeam: String = "/getGamesByTeam"
-        const val getGamesByTeamAndYear: String = "/getGamesByTeamAndYear"
-    }
-}
-
-object PathParameters {
-    const val YEAR = "year"
-}

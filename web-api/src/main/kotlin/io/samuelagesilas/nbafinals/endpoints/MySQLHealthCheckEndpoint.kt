@@ -1,6 +1,6 @@
 package io.samuelagesilas.nbafinals.endpoints
 
-import io.samuelagesilas.nbafinals.core.EndpointRoutingPaths
+import io.samuelagesilas.nbafinals.core.Paths
 import io.samuelagesilas.nbafinals.modules.Endpoint
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.ext.web.Router
@@ -11,7 +11,7 @@ import javax.sql.DataSource
 
 class MySQLHealthCheckEndpoint @Inject constructor(router: Router, dataSource: DataSource) : Endpoint {
 
-    private val mysqlRoute = router.route(EndpointRoutingPaths.HEALTH_CHECK)
+    private val mysqlRoute = router.route(Paths.healthCheck)
 
     init {
         mysqlRoute.blockingHandler{ ctx -> healthCheck(ctx, dataSource)}

@@ -1,7 +1,7 @@
 package io.samuelagesilas.nbafinals.endpoints
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.samuelagesilas.nbafinals.core.EndpointRoutingPaths
+import io.samuelagesilas.nbafinals.core.Paths
 import io.samuelagesilas.nbafinals.core.PathParameters
 import io.samuelagesilas.nbafinals.core.Responder
 import io.samuelagesilas.nbafinals.dao.ChampionsDAO
@@ -16,19 +16,19 @@ class NBAChampionsEndpoint @Inject constructor(router: Router,
                                                respond: Responder,
                                                private val nba: NBAChampionsHandlers) : Endpoint {
 
-    private val years = router.route(EndpointRoutingPaths.YEARS)
-    private val teams = router.route(EndpointRoutingPaths.TEAMS)
-    private val games = router.route(EndpointRoutingPaths.Games.GAMES)
-    private val gamesWonByYear = router.route(EndpointRoutingPaths.Games.WINS)
-    private val gamesLossesByYear = router.route(EndpointRoutingPaths.Games.LOSSES)
-    private val homeGamesByYear = router.route(EndpointRoutingPaths.Games.HOME_GAMES)
-    private val awayGamesByYear = router.route(EndpointRoutingPaths.Games.AWAY_GAMES)
-    private val getGamesByTeam = router.route(EndpointRoutingPaths.Games.getGamesByTeam)
-    private val getGamesByTeamAndYear = router.route(EndpointRoutingPaths.Games.getGamesByTeamAndYear)
+    private val games = router.route(Paths.Games.GAMES)
+    private val gamesWonByYear = router.route(Paths.Games.WINS)
+    private val gamesLossesByYear = router.route(Paths.Games.LOSSES)
+    private val homeGamesByYear = router.route(Paths.Games.HOME_GAMES)
+    private val awayGamesByYear = router.route(Paths.Games.AWAY_GAMES)
+    private val getYears = router.route(Paths.getYears)
+    private val getTeams = router.route(Paths.getTeams)
+    private val getGamesByTeam = router.route(Paths.getGamesByTeam)
+    private val getGamesByTeamAndYear = router.route(Paths.getGamesByTeamAndYear)
 
     init {
-        respond.to(years) { nba.selectAllChampionshipYears() }
-        respond.to(teams) { nba.selectChampionshipTeams() }
+        respond.to(getYears) { nba.selectAllChampionshipYears() }
+        respond.to(getTeams) { nba.selectChampionshipTeams() }
         respond.to(games) { ctx ->  nba.selectAllGamesByYear(ctx) }
         respond.to(gamesWonByYear) { ctx ->  nba.selectAllGamesWonByYear(ctx) }
         respond.to(gamesLossesByYear) { ctx ->  nba.selectAllGamesLostByYear(ctx) }
@@ -41,6 +41,8 @@ class NBAChampionsEndpoint @Inject constructor(router: Router,
 
 data class YearsResponse(val years:List<Int>)
 data class TeamsResponse(val teams:List<String>)
+data class TeamRequest(val team: String)
+data class TeamYearRequest(val team: String, val year: Int)
 
 class NBAChampionsHandlers @Inject constructor(private val championsDAO: ChampionsDAO,
                                                private val objectMapper: ObjectMapper) {
@@ -88,8 +90,3 @@ class NBAChampionsHandlers @Inject constructor(private val championsDAO: Champio
         return championsDAO.selectAllGamesByTeamNameAndYear(req.team, req.year)
     }
 }
-
-
-data class TeamRequest(val team: String)
-
-data class TeamYearRequest(val team: String, val year: Int)
