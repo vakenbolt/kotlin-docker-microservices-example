@@ -1,6 +1,5 @@
 package io.samuelagesilas.nbafinals.core
 
-import io.samuelagesilas.nbafinals.NBAFinalsApiVerticle
 import io.vertx.core.AsyncResult
 import io.vertx.core.Vertx
 import org.apache.logging.log4j.LogManager

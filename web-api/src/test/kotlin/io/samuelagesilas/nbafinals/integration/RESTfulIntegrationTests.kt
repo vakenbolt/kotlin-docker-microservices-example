@@ -16,12 +16,13 @@ class RESTfulIntegrationTests {
     @Test
     fun `test games-year`() {
         val resultStr = given()
-            .get(Paths.Games.GAMES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .header("Accept-Language", "en")
+                .get(Paths.Games.GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
         val resultJson: List<ChampionsModel> = jacksonObjectMapper().readValue<List<ChampionsModel>>(resultStr, t)
         with(resultJson[0]) {
@@ -80,68 +81,68 @@ class RESTfulIntegrationTests {
     @Test
     fun `test games-year-wins`() {
         val resultStr = given()
-            .get(Paths.Games.WINS.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.WINS.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         println(resultStr)
     }
 
     @Test
     fun `test games-year-losses`() {
         val resultStr = given()
-            .get(Paths.Games.LOSSES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.LOSSES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         println(resultStr)
     }
 
     @Test
     fun `test games-year-home`() {
         val resultStr = given()
-            .get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         println(resultStr)
     }
 
     @Test
     fun `test games-year-away`() {
         val resultStr = given()
-            .get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         println(resultStr)
     }
 
     @Test
     fun `test healthcheck`() {
         given()
-            .get(Paths.healthCheck)
-            .then()
-            .statusCode(200)
+                .get(Paths.healthCheck)
+                .then()
+                .statusCode(200)
     }
 
     @Test
     fun `test getYears`() {
         val resultStr = given()
-            .get(Paths.getYears)
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.getYears)
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<YearsResponse> = object : TypeReference<YearsResponse>() {}
         val resultJson: YearsResponse = jacksonObjectMapper().readValue<YearsResponse>(resultStr, t)
         with(resultJson.years) {
@@ -160,12 +161,12 @@ class RESTfulIntegrationTests {
     @Test
     fun `test getTeams`() {
         val resultStr = given()
-            .get(Paths.getTeams)
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.getTeams)
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<TeamsResponse> = object : TypeReference<TeamsResponse>() {}
         val resultJson: TeamsResponse = jacksonObjectMapper().readValue<TeamsResponse>(resultStr, t)
         with(resultJson.teams) {
@@ -187,9 +188,9 @@ class RESTfulIntegrationTests {
     @Test
     fun `test getGamesByTeam with missing payload`() {
         val resultStr = given()
-            .get(Paths.getGamesByTeam)
-            .then()
-            .statusCode(500)
+                .get(Paths.getGamesByTeam)
+                .then()
+                .statusCode(500)
     }
 
 //    @Test
@@ -204,13 +205,13 @@ class RESTfulIntegrationTests {
     @Test
     fun `test getGamesByTeam`() {
         val resultStr = given()
-            .body(TeamRequest("Cavaliers"))
-            .get(Paths.getGamesByTeam)
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .body(TeamRequest("Cavaliers"))
+                .get(Paths.getGamesByTeam)
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
         val resultJson: List<ChampionsModel> = jacksonObjectMapper().readValue<List<ChampionsModel>>(resultStr, t)
         assertEquals(7, resultJson.size)

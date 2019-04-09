@@ -11,3 +11,7 @@ object ServerConfigPropertyKeys {
     const val MYSQL_PASSWORD = "db_password"
     const val MYSQL_DATABASE = "db_database"
 }
+
+enum class Keys {
+    NO_RECORDS_FOUND
+}

@@ -29,6 +29,7 @@ fun healthCheck(routingContext: RoutingContext, dataSource: DataSource) {
         conn.close()
         response.setStatusCode(200).end()
     } catch (e: Exception) {
+        println(e)
         response.setStatusCode(500).end()
     }
 }

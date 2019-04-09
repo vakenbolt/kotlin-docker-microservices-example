@@ -1,4 +1,4 @@
-package io.samuelagesilas.nbafinals
+package io.samuelagesilas.nbafinals.core
 
 import io.samuelagesilas.nbafinals.core.ServerConfigPropertyKeys
 import io.vertx.core.*
