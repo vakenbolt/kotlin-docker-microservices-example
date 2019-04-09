@@ -1,7 +1,7 @@
 package io.samuelagesilas.nbafinals.endpoints
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.netty.handler.codec.http.HttpResponseStatus.*
+import io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND
 import io.samuelagesilas.nbafinals.core.*
 import io.samuelagesilas.nbafinals.dao.ChampionsDAO
 import io.samuelagesilas.nbafinals.dao.ChampionsModel
@@ -56,7 +56,6 @@ class NBAChampionsHandlers @Inject constructor(private val championsDAO: Champio
     }
 
     fun selectAllGamesLostByYear(ctx: RoutingContext): List<ChampionsModel> {
-        NOT_FOUND
         val year: Int = ctx.pathParam(PathParameters.YEAR).toInt()
         val result = championsDAO.selectAllGamesLostByYear(year)
         assert (result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }

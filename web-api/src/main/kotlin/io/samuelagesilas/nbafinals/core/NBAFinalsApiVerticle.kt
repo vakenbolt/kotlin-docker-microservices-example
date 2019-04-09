@@ -1,6 +1,5 @@
 package io.samuelagesilas.nbafinals.core
 
-import io.samuelagesilas.nbafinals.core.ServerConfigPropertyKeys
 import io.vertx.core.*
 import io.vertx.core.http.HttpServer
 import io.vertx.ext.web.Router
