@@ -12,6 +12,8 @@ object ServerConfigPropertyKeys {
     const val MYSQL_DATABASE = "db_database"
     const val JWT_KEY = "jwt_key"
     const val JWT_EXPIRATION_TIME_SECONDS = "jwt_expiration_time_seconds"
+    const val REDIS_HOST="redis_host"
+    const val REDIS_PORT="redis_port"
 }
 
 enum class Keys {

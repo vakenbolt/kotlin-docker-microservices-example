@@ -11,13 +11,13 @@ data class AuthenticationResponse(val bearer: String)
 
 class AuthenticationResolver @Inject constructor(private val jwtAuthentication: JwtAuthentication) {
 
+
     fun authenticate(username: String, password: String): ResolverResponse<AuthenticationResponse> {
         return if (username == "Chicago" && password == "Bulls") {
-            ResolverResponse(
-                data = AuthenticationResponse(
-                    jwtAuthentication.createJwt()
-                ), status = HttpResponseStatus.CREATED
-            )
+            val jwt = jwtAuthentication.createJwt()
+            jwtAuthentication.whiteListToken(jwt.token, jwt.transientUserSubject)
+            ResolverResponse(data = AuthenticationResponse(jwt.token),
+                             status = HttpResponseStatus.CREATED)
         } else {
             throw ApiException(HttpResponseStatus.UNAUTHORIZED)
         }
