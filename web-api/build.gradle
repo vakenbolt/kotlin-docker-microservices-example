@@ -1,12 +1,7 @@
 plugins {
     id 'kotlin'
-    id "com.github.johnrengelman.shadow"
+    id 'com.github.johnrengelman.shadow'
 }
-
-group 'web-api'
-version '0.9'
-apply plugin: 'kotlin'
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -19,7 +14,7 @@ dependencies {
     compile "io.vertx:vertx-web:$vertx_version"
     compile "com.google.inject:guice:$guice_version"
     compile "mysql:mysql-connector-java:$mysql_connector_version"
-    compile "org.jdbi:jdbi3-core:$jdbi3_version"
+    compile "org.jdbi:jdbi3-kotlin:$jdbi3_version"
     compile "org.jdbi:jdbi3-kotlin-sqlobject:$jdbi3_version"
     compile "com.zaxxer:HikariCP:$hikari_version"
     compile "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
@@ -34,16 +29,23 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
 }
 
-test {
-    useJUnitPlatform()
-}
-
-shadowJar {
-    version = '0.9-SNAPSHOT'
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 jar {
     manifest {
-        attributes('Main-Class': 'io.samuelagesilas.NBAFinalsApiServerKt')
+        attributes('Main-Class': 'io.samuelagesilas.nbafinals.NBAFinalsApiServerKt')
+    }
+}
+
+shadowJar {
+    version = '0.9-SNAPSHOT'
+    artifacts {
+        shadow(tasks.shadowJar.archivePath) {
+            builtBy shadowJar
+        }
     }
 }
