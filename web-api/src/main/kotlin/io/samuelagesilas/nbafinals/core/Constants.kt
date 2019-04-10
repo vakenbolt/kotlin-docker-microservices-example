@@ -17,3 +17,5 @@ object ServerConfigPropertyKeys {
 enum class Keys {
     NO_RECORDS_FOUND
 }
+
+const val AUTHENTICATED_JWT_SUBJECT = "AUTHENTICATED_JWT_SUBJECT"

@@ -5,6 +5,7 @@ import com.google.inject.Provides
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import io.netty.handler.codec.http.HttpResponseStatus
+import io.samuelagesilas.nbafinals.core.AUTHENTICATED_JWT_SUBJECT
 import io.samuelagesilas.nbafinals.core.ServerConfigPropertyKeys.JWT_EXPIRATION_TIME_SECONDS
 import io.samuelagesilas.nbafinals.core.ServerConfigPropertyKeys.JWT_KEY
 import io.samuelagesilas.nbafinals.core.fail
@@ -40,9 +41,9 @@ class JwtAuthentication @Inject constructor(@Named(JWT_KEY) private val jwtKey: 
         } else {
             val token = authorizationHeader.replace("Bearer ", "").trim()
             try {
-                val subject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
-                println(subject)
-                ctx.next()
+                val jwtSubject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
+                ctx.put(AUTHENTICATED_JWT_SUBJECT, jwtSubject)
+                        .next()
             } catch (e: Exception) {
                 ctx.fail(HttpResponseStatus.UNAUTHORIZED)
             }
@@ -51,10 +52,13 @@ class JwtAuthentication @Inject constructor(@Named(JWT_KEY) private val jwtKey: 
 
     fun createJwt(): String {
         val expirationInstant = Instant.now().plus(expirationTime.toLong(), ChronoUnit.SECONDS)
-        return Jwts.builder().setSubject("Sam")
+        return Jwts.builder()
+                .setSubject(createTransientUserSubject())
                 .setExpiration(Date.from(expirationInstant))
                 .signWith(secretKey).compact()
     }
+
+    private fun createTransientUserSubject() : String = "user:${Instant.now().toEpochMilli()}"
 }
 
 

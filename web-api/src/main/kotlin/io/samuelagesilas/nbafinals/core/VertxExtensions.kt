@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
-import io.samuelagesilas.nbafinals.endpoints.AuthenticationRequest
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.ext.web.RoutingContext
 import java.util.*
@@ -26,4 +25,6 @@ inline fun <reified T>RoutingContext.getPayload(): T {
 
 fun RoutingContext.fail(statusCode: HttpResponseStatus) = this.fail(statusCode.code())
 
-fun HttpServerResponse.setStatusCode(statusCode: HttpResponseStatus) = this.setStatusCode(statusCode.code())
+fun RoutingContext.getTransientUserSubject(statusCode: HttpResponseStatus) : String =  this.get(AUTHENTICATED_JWT_SUBJECT)
+
+fun HttpServerResponse.setStatusCode(statusCode: HttpResponseStatus) = this.setStatusCode(statusCode.code())!!
