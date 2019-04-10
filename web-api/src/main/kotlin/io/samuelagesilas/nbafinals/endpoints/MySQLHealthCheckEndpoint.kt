@@ -14,22 +14,21 @@ class MySQLHealthCheckEndpoint @Inject constructor(router: Router, dataSource: D
     private val mysqlRoute = router.route(Paths.healthCheck)
 
     init {
-        mysqlRoute.blockingHandler{ ctx -> healthCheck(ctx, dataSource)}
+        mysqlRoute.blockingHandler { ctx -> healthCheck(ctx, dataSource) }
     }
 }
 
 
 fun healthCheck(routingContext: RoutingContext, dataSource: DataSource) {
     val response: HttpServerResponse = routingContext.response();
+    var isHealthy = true
     try {
-        val conn = dataSource.connection
-        val statement = conn.createStatement();
-        statement.execute("SELECT 1;")
-        statement.close()
-        conn.close()
-        response.setStatusCode(200).end()
+        dataSource.connection.use { it.createStatement().use { statement -> statement.execute("SELECT 1") } }
     } catch (e: Exception) {
-        println(e)
-        response.setStatusCode(500).end()
+        isHealthy = false
     }
+    if (isHealthy)
+        response.setStatusCode(200).end()
+    else
+        response.setStatusCode(500).end()
 }
