@@ -1,6 +1,7 @@
 package io.samuelagesilas.nbafinals.endpoints
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND
 import io.samuelagesilas.nbafinals.core.*
 import io.samuelagesilas.nbafinals.dao.ChampionsDAO
@@ -35,6 +36,12 @@ class NBAChampionsHandlers @Inject constructor(private val championsDAO: Champio
                                                private val objectMapper: ObjectMapper,
                                                private val apiException: ApiExceptionFactory) {
 
+    companion object {
+        private fun getYearFromPathParam(ctx: RoutingContext): Int {
+            return assert(ctx.pathParam(PathParameters.YEAR)::toInt) { throw ApiException(BAD_REQUEST) }
+        }
+    }
+
     fun selectAllChampionshipYears(): YearsResponse {
         return YearsResponse(years = championsDAO.selectAllChampionshipYears())
     }
@@ -44,37 +51,32 @@ class NBAChampionsHandlers @Inject constructor(private val championsDAO: Champio
     }
 
     fun selectAllGamesByYear(ctx: RoutingContext): List<ChampionsModel> {
-        val year: Int = ctx.pathParam(PathParameters.YEAR).toInt()
-        val result = championsDAO.selectAllGamesByYear(year)
-        assert (result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        val result = championsDAO.selectAllGamesByYear(getYearFromPathParam(ctx))
+        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
         return result
     }
 
     fun selectAllGamesWonByYear(ctx: RoutingContext): List<ChampionsModel> {
-        val year: Int = ctx.pathParam(PathParameters.YEAR).toInt()
-        val result = championsDAO.selectAllGamesWonByYear(year)
-        assert (result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        val result = championsDAO.selectAllGamesWonByYear(getYearFromPathParam(ctx))
+        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
         return result
     }
 
     fun selectAllGamesLostByYear(ctx: RoutingContext): List<ChampionsModel> {
-        val year: Int = ctx.pathParam(PathParameters.YEAR).toInt()
-        val result = championsDAO.selectAllGamesLostByYear(year)
-        assert (result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        val result = championsDAO.selectAllGamesLostByYear(getYearFromPathParam(ctx))
+        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
         return result
     }
 
     fun selectAllHomeGamesByYear(ctx: RoutingContext): List<ChampionsModel> {
-        val year: Int = ctx.pathParam(PathParameters.YEAR).toInt()
-        val result = championsDAO.selectAllHomeGamesByYear(year)
-        assert (result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        val result = championsDAO.selectAllHomeGamesByYear(getYearFromPathParam(ctx))
+        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
         return result
     }
 
     fun selectAllAwayGamesByYear(ctx: RoutingContext): List<ChampionsModel> {
-        val year: Int = ctx.pathParam(PathParameters.YEAR).toInt()
-        val result = championsDAO.selectAllAwayGamesByYear(year)
-        assert (result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        val result = championsDAO.selectAllAwayGamesByYear(getYearFromPathParam(ctx))
+        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
         return result
     }
 

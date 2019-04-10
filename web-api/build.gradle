@@ -35,6 +35,13 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
+test {
+    useJUnitPlatform()
+    if (System.properties['test.profile'] != 'integration') {
+        exclude '**/*IntegrationTest*'
+    }
+}
+
 jar {
     manifest {
         attributes('Main-Class': 'io.samuelagesilas.nbafinals.NBAFinalsApiServerKt')

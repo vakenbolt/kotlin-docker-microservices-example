@@ -17,6 +17,16 @@ import java.util.*
 
 class ApiIntegrationTests {
 
+    companion object {
+        private fun assertErrorMessage(resultStr: String) {
+            val t: TypeReference<LocalizedErrorResponse> = object : TypeReference<LocalizedErrorResponse>() {}
+            val resultJson: LocalizedErrorResponse = jacksonObjectMapper().readValue<LocalizedErrorResponse>(resultStr, t)
+            val errMsg = LocalizationManager().getBundle(Locale.ENGLISH)!!.getString(Keys.NO_RECORDS_FOUND.name)
+            assertEquals(errMsg, resultJson.errorMessage)
+        }
+    }
+
+
     @Test
     fun `test games-year`() {
         val resultStr = given()
@@ -102,14 +112,7 @@ class ApiIntegrationTests {
             .extract()
             .body()
             .asString()
-        foobar(resultStr)
-    }
-
-    private fun foobar(resultStr: String) {
-        val t: TypeReference<LocalizedErrorResponse> = object : TypeReference<LocalizedErrorResponse>() {}
-        val resultJson: LocalizedErrorResponse = jacksonObjectMapper().readValue<LocalizedErrorResponse>(resultStr, t)
-        val errMsg = LocalizationManager().getBundle(Locale.ENGLISH)!!.getString(Keys.NO_RECORDS_FOUND.name)
-        assertEquals(errMsg, resultJson.errorMessage)
+        assertErrorMessage(resultStr)
     }
 
     @Test
@@ -132,7 +135,7 @@ class ApiIntegrationTests {
             .extract()
             .body()
             .asString()
-        foobar(resultStr)
+        assertErrorMessage(resultStr)
     }
 
     @Test
@@ -155,7 +158,7 @@ class ApiIntegrationTests {
             .extract()
             .body()
             .asString()
-        foobar(resultStr)
+        assertErrorMessage(resultStr)
     }
 
     @Test
@@ -178,7 +181,7 @@ class ApiIntegrationTests {
             .extract()
             .body()
             .asString()
-        foobar(resultStr)
+        assertErrorMessage(resultStr)
     }
 
     @Test

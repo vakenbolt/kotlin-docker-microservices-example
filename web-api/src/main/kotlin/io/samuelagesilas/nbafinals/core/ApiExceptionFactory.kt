@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 data class LocalizedErrorResponse(val errorMessage: String)
 
-class ApiException(val statusCode: Int, localizedMessage: String? = null) : Exception(localizedMessage)
+class ApiException(val statusCode: HttpResponseStatus, localizedMessage: String? = null) : Exception(localizedMessage)
 
 class ApiExceptionFactory @Inject constructor(private val localizationManager: LocalizationManager) {
 
@@ -17,6 +17,6 @@ class ApiExceptionFactory @Inject constructor(private val localizationManager: L
         } else {
             null
         }
-        return ApiException(statusCode.code(), localizedMessage)
+        return ApiException(statusCode, localizedMessage)
     }
 }

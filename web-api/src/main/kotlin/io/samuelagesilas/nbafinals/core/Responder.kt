@@ -24,9 +24,11 @@ class Responder @Inject constructor(private val router: Router,
                 ctx.response().setStatusCode(statusCodes.success).end(jsonResponse)
             } catch (e: Exception) {
                 logger.throwing(e)
-                val response = objectMapper.writeValueAsString(LocalizedErrorResponse(e.message!!))
+                var response = ""
+                if (e.message != null)
+                    response  = objectMapper.writeValueAsString(LocalizedErrorResponse(e.message!!))
                 if (e is ApiException) {
-                    ctx.response().setStatusCode(e.statusCode).end(response)
+                    ctx.response().setStatusCode(e.statusCode.code()).end(response)
                 } else {
                     ctx.response().setStatusCode(statusCodes.fail).end(response)
                 }
