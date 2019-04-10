@@ -16,4 +16,3 @@ class AuthenticationEndpoint @Inject constructor(respond: Resolver,
         }
     }
 }
-
