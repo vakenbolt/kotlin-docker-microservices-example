@@ -32,7 +32,8 @@ interface ChampionsDAO {
     fun selectAllGamesByTeamNameAndYear(@Bind("team") team: String, year: Int): List<ChampionsModel>
 }
 
-data class ChampionsModel(val year: Int,
+data class ChampionsModel(val id: String,
+                          val year: Int,
                           val team: String,
                           val game: Int,
                           val win: Boolean,
