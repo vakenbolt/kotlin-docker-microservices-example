@@ -16,6 +16,7 @@ fun main() {
                                         LocalizationModule(),
                                         JacksonModule(),
                                         JdbiModule(),
+                                        JwtModule(),
                                         ServerConfigModule(serverConfigPath))
     val nbaFinalsApiServer = injector.getInstance(NBAFinalsApiVerticle::class.java)
     with(Vertx.vertx()) {

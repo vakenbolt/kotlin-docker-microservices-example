@@ -10,6 +10,8 @@ object ServerConfigPropertyKeys {
     const val MYSQL_USERNAME = "db_username"
     const val MYSQL_PASSWORD = "db_password"
     const val MYSQL_DATABASE = "db_database"
+    const val JWT_KEY = "jwt_key"
+    const val JWT_EXPIRATION_TIME_SECONDS = "jwt_expiration_time_seconds"
 }
 
 enum class Keys {

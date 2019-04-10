@@ -11,7 +11,7 @@ import io.vertx.ext.web.RoutingContext
 import javax.inject.Inject
 
 
-class NBAChampionsEndpoint @Inject constructor(respond: Responder,
+class NBAChampionsEndpoint @Inject constructor(respond: Resolver,
                                                private val nba: NBAChampionsHandlers) : Endpoint {
 
     init {
@@ -42,51 +42,51 @@ class NBAChampionsHandlers @Inject constructor(private val championsDAO: Champio
         }
     }
 
-    fun selectAllChampionshipYears(): YearsResponse {
-        return YearsResponse(years = championsDAO.selectAllChampionshipYears())
+    fun selectAllChampionshipYears(): ResolverResponse<YearsResponse> {
+        return ResolverResponse(YearsResponse(years = championsDAO.selectAllChampionshipYears()))
     }
 
-    fun selectChampionshipTeams(): TeamsResponse {
-        return TeamsResponse(teams = championsDAO.selectChampionshipTeams())
+    fun selectChampionshipTeams(): ResolverResponse<TeamsResponse> {
+        return ResolverResponse(TeamsResponse(teams = championsDAO.selectChampionshipTeams()))
     }
 
-    fun selectAllGamesByYear(ctx: RoutingContext): List<ChampionsModel> {
+    fun selectAllGamesByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllGamesByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return result
+        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        return ResolverResponse(result)
     }
 
-    fun selectAllGamesWonByYear(ctx: RoutingContext): List<ChampionsModel> {
+    fun selectAllGamesWonByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllGamesWonByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return result
+        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        return ResolverResponse(result)
     }
 
-    fun selectAllGamesLostByYear(ctx: RoutingContext): List<ChampionsModel> {
+    fun selectAllGamesLostByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllGamesLostByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return result
+        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        return ResolverResponse(result)
     }
 
-    fun selectAllHomeGamesByYear(ctx: RoutingContext): List<ChampionsModel> {
+    fun selectAllHomeGamesByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllHomeGamesByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return result
+        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        return ResolverResponse(result)
     }
 
-    fun selectAllAwayGamesByYear(ctx: RoutingContext): List<ChampionsModel> {
+    fun selectAllAwayGamesByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllAwayGamesByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return result
+        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        return ResolverResponse(result)
     }
 
-    fun selectAllGamesByTeamName(ctx: RoutingContext): List<ChampionsModel> {
+    fun selectAllGamesByTeamName(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
         val req: TeamRequest = objectMapper.readValue(ctx.bodyAsString, TeamRequest::class.java)
-        return championsDAO.selectAllGamesByTeamName(req.team)
+        return ResolverResponse(championsDAO.selectAllGamesByTeamName(req.team))
     }
 
-    fun selectAllGamesByYearAndTeamName(ctx: RoutingContext): List<ChampionsModel> {
+    fun selectAllGamesByYearAndTeamName(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
         val req: TeamYearRequest = objectMapper.readValue(ctx.bodyAsString, TeamYearRequest::class.java)
-        return championsDAO.selectAllGamesByTeamNameAndYear(req.team, req.year)
+        return ResolverResponse(championsDAO.selectAllGamesByTeamNameAndYear(req.team, req.year))
     }
 }

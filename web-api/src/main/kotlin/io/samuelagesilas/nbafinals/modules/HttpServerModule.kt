@@ -9,6 +9,7 @@ import io.vertx.ext.web.handler.BodyHandler
 import org.apache.logging.log4j.LogManager
 import javax.inject.Singleton
 
+
 class HttpServerModule : AbstractModule() {
 
     private val vertx = Vertx.vertx()

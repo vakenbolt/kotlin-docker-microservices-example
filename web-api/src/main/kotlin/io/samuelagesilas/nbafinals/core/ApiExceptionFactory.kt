@@ -11,7 +11,7 @@ class ApiException(val statusCode: HttpResponseStatus, localizedMessage: String?
 
 class ApiExceptionFactory @Inject constructor(private val localizationManager: LocalizationManager) {
 
-    fun new(statusCode: HttpResponseStatus, locale: Locale, localizedMessageKey: Keys? = null): ApiException {
+    fun create(statusCode: HttpResponseStatus, locale: Locale, localizedMessageKey: Keys? = null): ApiException {
         val localizedMessage: String? = if (localizedMessageKey != null) {
             localizationManager.getBundle(locale)?.getString(localizedMessageKey.name)
         } else {

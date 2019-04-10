@@ -1,5 +1,11 @@
 package io.samuelagesilas.nbafinals.core
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
+import io.samuelagesilas.nbafinals.endpoints.AuthenticationRequest
+import io.vertx.core.http.HttpServerResponse
 import io.vertx.ext.web.RoutingContext
 import java.util.*
 
@@ -11,3 +17,13 @@ fun RoutingContext.locale(): Locale {
         Locale(preferredLanguage.tag())
     }
 }
+
+inline fun <reified T>RoutingContext.getPayload(): T {
+    val typeReference: TypeReference<T> = object : TypeReference<T>() {}
+    assert(this.bodyAsString == null) { throw ApiException(BAD_REQUEST) }
+    return jacksonObjectMapper().readValue<T>(this.bodyAsString, typeReference)
+}
+
+fun RoutingContext.fail(statusCode: HttpResponseStatus) = this.fail(statusCode.code())
+
+fun HttpServerResponse.setStatusCode(statusCode: HttpResponseStatus) = this.setStatusCode(statusCode.code())
