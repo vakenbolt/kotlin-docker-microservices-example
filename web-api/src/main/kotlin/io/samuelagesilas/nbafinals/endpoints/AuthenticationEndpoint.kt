@@ -1,13 +1,13 @@
 package io.samuelagesilas.nbafinals.endpoints
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.samuelagesilas.nbafinals.core.*
 import io.samuelagesilas.nbafinals.core.EndpointRouteSecurity.UN_SECURED
+import io.samuelagesilas.nbafinals.core.Paths
+import io.samuelagesilas.nbafinals.core.Resolver
+import io.samuelagesilas.nbafinals.core.getPayload
 import io.samuelagesilas.nbafinals.modules.Endpoint
 import javax.inject.Inject
 
 class AuthenticationEndpoint @Inject constructor(respond: Resolver,
-                                                 private val objectMapper: ObjectMapper,
                                                  private val auth: AuthenticationResolver): Endpoint {
     init {
         respond.to(Paths.authenticate, UN_SECURED) { ctx ->

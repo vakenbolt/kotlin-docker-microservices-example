@@ -1,6 +1,5 @@
 package io.samuelagesilas.nbafinals.endpoints
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import io.samuelagesilas.nbafinals.core.*
 import io.samuelagesilas.nbafinals.modules.Endpoint
@@ -9,7 +8,6 @@ import javax.inject.Inject
 
 
 class NBAChampionsEndpoint @Inject constructor(resolve: Resolver,
-                                               private val objectMapper: ObjectMapper,
                                                private val nba: NBAChampionsResolver) : Endpoint {
 
     init {
