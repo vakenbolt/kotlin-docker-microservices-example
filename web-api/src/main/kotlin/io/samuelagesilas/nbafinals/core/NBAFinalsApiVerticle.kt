@@ -37,7 +37,7 @@ class NBAFinalsApiVerticle @Inject constructor(@Named(ServerConfigPropertyKeys.P
         stopFuture!!.complete()
     }
 
-    override fun deploymentID(): String = this.deploymentId!!
+    override fun deploymentID(): String = this.deploymentId
 
     override fun init(vertx: Vertx?, context: Context?) {
         logger.info("Initializing Verticle: ${context!!.deploymentID()}")

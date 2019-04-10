@@ -6,15 +6,21 @@ import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
+import org.apache.logging.log4j.LogManager
 import javax.inject.Singleton
 
 class HttpServerModule : AbstractModule() {
 
     private val vertx = Vertx.vertx()
 
+    private val logger = LogManager.getLogger(HttpServerModule::class.java)
+
     @Provides
     @Singleton
-    fun providesHttpServer(endpoints: MutableSet<Endpoint>): HttpServer = vertx.createHttpServer()
+    fun providesHttpServer(endpoints: MutableSet<Endpoint>): HttpServer {
+        endpoints.forEach { ep: Endpoint -> logger.info("Initialized endpoint: ${ep::class.java.name}.") }
+        return vertx.createHttpServer()
+    }
 
     @Provides
     @Singleton

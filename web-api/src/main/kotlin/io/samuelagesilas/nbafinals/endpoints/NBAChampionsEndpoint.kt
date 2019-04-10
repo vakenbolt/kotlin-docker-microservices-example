@@ -52,7 +52,9 @@ class NBAChampionsHandlers @Inject constructor(private val championsDAO: Champio
 
     fun selectAllGamesWonByYear(ctx: RoutingContext): List<ChampionsModel> {
         val year: Int = ctx.pathParam(PathParameters.YEAR).toInt()
-        return championsDAO.selectAllGamesWonByYear(year)
+        val result = championsDAO.selectAllGamesWonByYear(year)
+        assert (result.isEmpty()) { throw apiException.new(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
+        return result
     }
 
     fun selectAllGamesLostByYear(ctx: RoutingContext): List<ChampionsModel> {
