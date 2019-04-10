@@ -19,7 +19,7 @@ fun RoutingContext.locale(): Locale {
 
 inline fun <reified T>RoutingContext.getPayload(): T {
     val typeReference: TypeReference<T> = object : TypeReference<T>() {}
-    assert(this.bodyAsString == null) { throw ApiException(BAD_REQUEST) }
+    check(bodyAsString == null) { throw ApiException(BAD_REQUEST) }
     return jacksonObjectMapper().readValue<T>(this.bodyAsString, typeReference)
 }
 

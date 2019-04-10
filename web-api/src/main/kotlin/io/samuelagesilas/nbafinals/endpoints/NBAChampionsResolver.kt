@@ -6,6 +6,7 @@ import io.samuelagesilas.nbafinals.core.Keys
 import io.samuelagesilas.nbafinals.core.ResolverResponse
 import io.samuelagesilas.nbafinals.dao.ChampionsDAO
 import io.samuelagesilas.nbafinals.dao.ChampionsModel
+import io.samuelagesilas.nbafinals.core.check
 import java.util.*
 import javax.inject.Inject
 
@@ -29,31 +30,31 @@ class NBAChampionsResolver @Inject constructor(private val championsDAO: Champio
 
     fun selectAllGamesByYear(year: Int, locale: Locale): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllGamesByYear(year)
-        io.samuelagesilas.nbafinals.core.assert(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        check(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
     }
 
     fun selectAllGamesWonByYear(year: Int, locale: Locale): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllGamesWonByYear(year)
-        io.samuelagesilas.nbafinals.core.assert(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        check(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
     }
 
     fun selectAllGamesLostByYear(year: Int, locale: Locale): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllGamesLostByYear(year)
-        io.samuelagesilas.nbafinals.core.assert(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        check(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
     }
 
     fun selectAllHomeGamesByYear(year: Int, locale: Locale): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllHomeGamesByYear(year)
-        io.samuelagesilas.nbafinals.core.assert(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        check(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
     }
 
     fun selectAllAwayGamesByYear(year: Int, locale: Locale): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllAwayGamesByYear(year)
-        io.samuelagesilas.nbafinals.core.assert(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+            check(result.isEmpty()) { throw apiException.create(HttpResponseStatus.NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
     }
 

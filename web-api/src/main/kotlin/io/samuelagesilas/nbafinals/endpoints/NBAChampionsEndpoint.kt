@@ -31,6 +31,6 @@ class NBAChampionsEndpoint @Inject constructor(resolve: Resolver,
     }
 
     private fun getYear(ctx: RoutingContext): Int {
-        return assert(ctx.pathParam(PathParameters.YEAR)::toInt) { throw ApiException(BAD_REQUEST) }
+        return check(ctx.pathParam(PathParameters.YEAR)::toInt) { throw ApiException(BAD_REQUEST) }
     }
 }
