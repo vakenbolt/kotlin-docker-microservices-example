@@ -5,7 +5,7 @@ import io.samuelagesilas.nbafinals.core.ApiExceptionFactory
 import io.samuelagesilas.nbafinals.core.Keys
 import io.samuelagesilas.nbafinals.core.ResolverResponse
 import io.samuelagesilas.nbafinals.dao.ChampionsDAO
-import io.samuelagesilas.nbafinals.dao.ChampionsModel
+import io.samuelagesilas.nbafinals.models.ChampionsModel
 import io.samuelagesilas.nbafinals.core.check
 import java.util.*
 import javax.inject.Inject

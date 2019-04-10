@@ -7,7 +7,7 @@ import io.restassured.http.Header
 import io.samuelagesilas.nbafinals.core.Keys
 import io.samuelagesilas.nbafinals.core.LocalizedErrorResponse
 import io.samuelagesilas.nbafinals.core.Paths
-import io.samuelagesilas.nbafinals.dao.ChampionsModel
+import io.samuelagesilas.nbafinals.models.ChampionsModel
 import io.samuelagesilas.nbafinals.endpoints.*
 import io.samuelagesilas.nbafinals.modules.LocalizationManager
 import org.junit.jupiter.api.Assertions.assertEquals

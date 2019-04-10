@@ -1,5 +1,6 @@
 package io.samuelagesilas.nbafinals.dao
 
+import io.samuelagesilas.nbafinals.models.ChampionsModel
 import org.jdbi.v3.sqlobject.customizer.Bind
 import org.jdbi.v3.sqlobject.statement.SqlQuery
 
@@ -32,28 +33,3 @@ interface ChampionsDAO {
     fun selectAllGamesByTeamNameAndYear(@Bind("team") team: String, year: Int): List<ChampionsModel>
 }
 
-data class ChampionsModel(val id: String,
-                          val year: Int,
-                          val team: String,
-                          val game: Int,
-                          val win: Boolean,
-                          val home: Boolean,
-                          val mp: Int,
-                          val fg: Int,
-                          val fga: Int,
-                          val fgp: Double,
-                          val tp: Int,
-                          val tpa: Int,
-                          val tpp: Double,
-                          val ft: Int,
-                          val fta: Int,
-                          val ftp: Double,
-                          val orb: Int,
-                          val drb: Int,
-                          val trb: Int,
-                          val ast: Int,
-                          val stl: Int,
-                          val blk: Int,
-                          val tov: Int,
-                          val pf: Int,
-                          val pts: Int)
