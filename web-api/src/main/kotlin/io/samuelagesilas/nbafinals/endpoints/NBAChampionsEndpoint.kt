@@ -2,91 +2,35 @@ package io.samuelagesilas.nbafinals.endpoints
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
-import io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND
 import io.samuelagesilas.nbafinals.core.*
-import io.samuelagesilas.nbafinals.dao.ChampionsDAO
-import io.samuelagesilas.nbafinals.dao.ChampionsModel
 import io.samuelagesilas.nbafinals.modules.Endpoint
 import io.vertx.ext.web.RoutingContext
 import javax.inject.Inject
 
 
-class NBAChampionsEndpoint @Inject constructor(respond: Resolver,
-                                               private val nba: NBAChampionsHandlers) : Endpoint {
+class NBAChampionsEndpoint @Inject constructor(resolve: Resolver,
+                                               private val objectMapper: ObjectMapper,
+                                               private val nba: NBAChampionsResolver) : Endpoint {
 
     init {
-        respond.to(Paths.getYears) { nba.selectAllChampionshipYears() }
-        respond.to(Paths.getTeams) { nba.selectChampionshipTeams() }
-        respond.to(Paths.Games.GAMES) { ctx -> nba.selectAllGamesByYear(ctx) }
-        respond.to(Paths.Games.WINS) { ctx -> nba.selectAllGamesWonByYear(ctx) }
-        respond.to(Paths.Games.LOSSES) { ctx -> nba.selectAllGamesLostByYear(ctx) }
-        respond.to(Paths.Games.HOME_GAMES) { ctx -> nba.selectAllHomeGamesByYear(ctx) }
-        respond.to(Paths.Games.AWAY_GAMES) { ctx -> nba.selectAllAwayGamesByYear(ctx) }
-        respond.to(Paths.getGamesByTeam) { ctx -> nba.selectAllGamesByTeamName(ctx) }
-        respond.to(Paths.getGamesByTeamAndYear) { ctx -> nba.selectAllGamesByYearAndTeamName(ctx) }
-    }
-}
-
-data class YearsResponse(val years: List<Int>)
-data class TeamsResponse(val teams: List<String>)
-data class TeamRequest(val team: String)
-data class TeamYearRequest(val team: String, val year: Int)
-
-class NBAChampionsHandlers @Inject constructor(private val championsDAO: ChampionsDAO,
-                                               private val objectMapper: ObjectMapper,
-                                               private val apiException: ApiExceptionFactory) {
-
-    companion object {
-        private fun getYearFromPathParam(ctx: RoutingContext): Int {
-            return assert(ctx.pathParam(PathParameters.YEAR)::toInt) { throw ApiException(BAD_REQUEST) }
+        resolve.to(Paths.getYears) { nba.selectAllChampionshipYears() }
+        resolve.to(Paths.getTeams) { nba.selectChampionshipTeams() }
+        resolve.to(Paths.Games.GAMES) { ctx -> nba.selectAllGamesByYear(getYear(ctx), ctx.locale()) }
+        resolve.to(Paths.Games.WINS) { ctx -> nba.selectAllGamesWonByYear(getYear(ctx), ctx.locale()) }
+        resolve.to(Paths.Games.LOSSES) { ctx -> nba.selectAllGamesLostByYear(getYear(ctx), ctx.locale()) }
+        resolve.to(Paths.Games.HOME_GAMES) { ctx -> nba.selectAllHomeGamesByYear(getYear(ctx), ctx.locale()) }
+        resolve.to(Paths.Games.AWAY_GAMES) { ctx -> nba.selectAllAwayGamesByYear(getYear(ctx), ctx.locale()) }
+        resolve.to(Paths.getGamesByTeam) { ctx ->
+            val team: String = objectMapper.readValue(ctx.bodyAsString, TeamRequest::class.java).team
+            nba.selectAllGamesByTeamName(team)
+        }
+        resolve.to(Paths.getGamesByTeamAndYear) { ctx ->
+            val req: TeamYearRequest = objectMapper.readValue(ctx.bodyAsString, TeamYearRequest::class.java)
+            nba.selectAllGamesByYearAndTeamName(req.team, req.year)
         }
     }
 
-    fun selectAllChampionshipYears(): ResolverResponse<YearsResponse> {
-        return ResolverResponse(YearsResponse(years = championsDAO.selectAllChampionshipYears()))
-    }
-
-    fun selectChampionshipTeams(): ResolverResponse<TeamsResponse> {
-        return ResolverResponse(TeamsResponse(teams = championsDAO.selectChampionshipTeams()))
-    }
-
-    fun selectAllGamesByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
-        val result = championsDAO.selectAllGamesByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return ResolverResponse(result)
-    }
-
-    fun selectAllGamesWonByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
-        val result = championsDAO.selectAllGamesWonByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return ResolverResponse(result)
-    }
-
-    fun selectAllGamesLostByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
-        val result = championsDAO.selectAllGamesLostByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return ResolverResponse(result)
-    }
-
-    fun selectAllHomeGamesByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
-        val result = championsDAO.selectAllHomeGamesByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return ResolverResponse(result)
-    }
-
-    fun selectAllAwayGamesByYear(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
-        val result = championsDAO.selectAllAwayGamesByYear(getYearFromPathParam(ctx))
-        assert(result.isEmpty()) { throw apiException.create(NOT_FOUND, ctx.locale(), Keys.NO_RECORDS_FOUND) }
-        return ResolverResponse(result)
-    }
-
-    fun selectAllGamesByTeamName(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
-        val req: TeamRequest = objectMapper.readValue(ctx.bodyAsString, TeamRequest::class.java)
-        return ResolverResponse(championsDAO.selectAllGamesByTeamName(req.team))
-    }
-
-    fun selectAllGamesByYearAndTeamName(ctx: RoutingContext): ResolverResponse<List<ChampionsModel>> {
-        val req: TeamYearRequest = objectMapper.readValue(ctx.bodyAsString, TeamYearRequest::class.java)
-        return ResolverResponse(championsDAO.selectAllGamesByTeamNameAndYear(req.team, req.year))
+    private fun getYear(ctx: RoutingContext): Int {
+        return assert(ctx.pathParam(PathParameters.YEAR)::toInt) { throw ApiException(BAD_REQUEST) }
     }
 }

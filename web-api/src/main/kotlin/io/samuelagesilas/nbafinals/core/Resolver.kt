@@ -35,7 +35,7 @@ class Resolver @Inject constructor(private val router: Router,
         }
         router.route(path).blockingHandler { ctx: RoutingContext ->
             try {
-                val resolverResponse = x.invoke(ctx)
+                val resolverResponse = x.invoke(ctx)    //invokes the resolver function
                 with(ctx.response()) {
                     when (resolverResponse.data != null) {
                         true -> this.setStatusCode(resolverResponse.status).end(objectMapper.writeValueAsString(resolverResponse.data))
