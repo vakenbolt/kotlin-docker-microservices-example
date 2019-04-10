@@ -21,11 +21,11 @@ class NBAChampionsEndpoint @Inject constructor(resolve: Resolver,
         resolve.to(Paths.Games.HOME_GAMES) { ctx -> nba.selectAllHomeGamesByYear(getYear(ctx), ctx.locale()) }
         resolve.to(Paths.Games.AWAY_GAMES) { ctx -> nba.selectAllAwayGamesByYear(getYear(ctx), ctx.locale()) }
         resolve.to(Paths.getGamesByTeam) { ctx ->
-            val team: String = objectMapper.readValue(ctx.bodyAsString, TeamRequest::class.java).team
+            val team: String = ctx.getPayload<TeamRequest>().team
             nba.selectAllGamesByTeamName(team)
         }
         resolve.to(Paths.getGamesByTeamAndYear) { ctx ->
-            val req: TeamYearRequest = objectMapper.readValue(ctx.bodyAsString, TeamYearRequest::class.java)
+            val req = ctx.getPayload<TeamYearRequest>()
             nba.selectAllGamesByYearAndTeamName(req.team, req.year)
         }
     }
