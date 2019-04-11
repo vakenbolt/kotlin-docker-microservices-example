@@ -1,0 +1,28 @@
+version: '3.6'
+services:
+  redis:
+    image: "redis:4.0.2"
+    container_name: "nba_finals_redis"
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+  mysql:
+    image: "mysql:5.7.20"
+    container_name: "nba_finals_mysql"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: nba_finals
+      MYSQL_USER: nba_finals_service
+      MYSQL_PASSWORD: ilovethisgame
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./configs/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro  #:ro = Read Only
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+

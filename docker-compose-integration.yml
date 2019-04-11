@@ -1,0 +1,40 @@
+version: '3.6'
+services:
+  redis:
+    image: "redis:4.0.2"
+    container_name: "nba_finals_redis_integration"
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+  mysql:
+    image: "mysql:5.7.20"
+    container_name: "nba_finals_mysql_integration"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: nba_finals
+      MYSQL_USER: nba_finals_service
+      MYSQL_PASSWORD: ilovethisgame
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./configs/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro  #:ro = Read Only
+  api:
+    image: "nba_finals_web_api:0.9"
+    container_name: "nba_finals_web_api_integration"
+    depends_on:
+      - "redis"
+      - "mysql"
+    environment:
+      API_CONFIG: "/configs/api_server.integration.config.json"
+      ROOT_PATH_AVAILABLE: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./configs/api_server.integration.config.json:/configs/api_server.integration.config.json:ro  #:ro = Read Only
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
