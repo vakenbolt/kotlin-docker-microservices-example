@@ -14,6 +14,7 @@ class NBAChampionsEndpoint @Inject constructor(resolve: Resolver,
         resolve.to(Paths.getYears) { nba.selectAllChampionshipYears() }
         resolve.to(Paths.getTeams) { nba.selectChampionshipTeams() }
         resolve.to(Paths.Games.GAMES) { ctx -> nba.selectAllGamesByYear(getYear(ctx), ctx.locale()) }
+        resolve.to(Paths.Games.GAME) { ctx ->  nba.selectGameById(getGameId(ctx), ctx.locale()) }
         resolve.to(Paths.Games.WINS) { ctx -> nba.selectAllGamesWonByYear(getYear(ctx), ctx.locale()) }
         resolve.to(Paths.Games.LOSSES) { ctx -> nba.selectAllGamesLostByYear(getYear(ctx), ctx.locale()) }
         resolve.to(Paths.Games.HOME_GAMES) { ctx -> nba.selectAllHomeGamesByYear(getYear(ctx), ctx.locale()) }
@@ -30,5 +31,9 @@ class NBAChampionsEndpoint @Inject constructor(resolve: Resolver,
 
     private fun getYear(ctx: RoutingContext): Int {
         return check(ctx.pathParam(PathParameters.YEAR)::toInt) { throw ApiException(BAD_REQUEST) }
+    }
+
+    private fun getGameId(ctx: RoutingContext): Int {
+        return check(ctx.pathParam(PathParameters.GAME_ID)::toInt) { throw ApiException(BAD_REQUEST) }
     }
 }

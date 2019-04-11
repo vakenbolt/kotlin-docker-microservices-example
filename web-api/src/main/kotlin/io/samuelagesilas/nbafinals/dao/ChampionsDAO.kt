@@ -14,6 +14,9 @@ interface ChampionsDAO {
     @SqlQuery("SELECT * FROM nba_finals.champions where year=:year order by game ASC")
     fun selectAllGamesByYear(@Bind("year") year: Int): List<ChampionsModel>
 
+    @SqlQuery("SELECT * FROM nba_finals.champions where id=:id")
+    fun selectGameById(@Bind("id") id: Int) : ChampionsModel?
+
     @SqlQuery("SELECT * FROM nba_finals.champions where year=:year AND win=1")
     fun selectAllGamesWonByYear(@Bind("year") year: Int): List<ChampionsModel>
 

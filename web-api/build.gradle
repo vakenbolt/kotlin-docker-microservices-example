@@ -26,7 +26,7 @@ dependencies {
     compile "redis.clients:jedis:$jedis_version"
     compile "io.jsonwebtoken:jjwt-api:$jjwt_version"
     runtime "io.jsonwebtoken:jjwt-impl:$jjwt_version"
-    runtime  "io.jsonwebtoken:jjwt-jackson:$jjwt_version"
+    runtime "io.jsonwebtoken:jjwt-jackson:$jjwt_version"
 
     testImplementation "io.rest-assured:rest-assured:$rest_assured"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"

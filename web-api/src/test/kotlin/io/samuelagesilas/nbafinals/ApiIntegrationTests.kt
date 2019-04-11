@@ -6,9 +6,10 @@ import io.restassured.RestAssured.given
 import io.restassured.http.Header
 import io.samuelagesilas.nbafinals.core.Keys
 import io.samuelagesilas.nbafinals.core.LocalizedErrorResponse
+import io.samuelagesilas.nbafinals.core.PathParameters
 import io.samuelagesilas.nbafinals.core.Paths
-import io.samuelagesilas.nbafinals.models.ChampionsModel
 import io.samuelagesilas.nbafinals.endpoints.*
+import io.samuelagesilas.nbafinals.models.ChampionsModel
 import io.samuelagesilas.nbafinals.modules.LocalizationManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
@@ -31,20 +32,20 @@ class ApiIntegrationTests {
         }
     }
 
-    private lateinit var authenticationToken : String;
-    private lateinit var authorizationHeader : Header;
+    private lateinit var authenticationToken: String;
+    private lateinit var authorizationHeader: Header;
 
     @BeforeAll
     fun getAuthenticationToken() {
         val req = AuthenticationRequest("Chicago", "Bulls")
         val resultStr = given().header("Accept-Language", "en")
-                .body(jackson.writeValueAsString(req))
-                .post(Paths.authenticate)
-                .then()
-                .statusCode(201)
-                .extract()
-                .body()
-                .asString()
+            .body(jackson.writeValueAsString(req))
+            .post(Paths.authenticate)
+            .then()
+            .statusCode(201)
+            .extract()
+            .body()
+            .asString()
         val t: TypeReference<AuthenticationResponse> = object : TypeReference<AuthenticationResponse>() {}
         val authenticationResponse = jackson.readValue<AuthenticationResponse>(resultStr, t)
         this.authenticationToken = authenticationResponse.bearer
@@ -55,41 +56,15 @@ class ApiIntegrationTests {
     @Test
     fun `test games-year`() {
         val resultStr = given().header(authorizationHeader)
-                .header("Accept-Language", "en")
-                .get(Paths.Games.GAMES.replace(":year", "1980"))
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
+            .header("Accept-Language", "en")
+            .get(Paths.Games.GAMES.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
         val t: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
         val resultJson: List<ChampionsModel> = jackson.readValue<List<ChampionsModel>>(resultStr, t)
-        with(resultJson[0]) {
-            assertEquals(1980, this.year)
-            assertEquals("Lakers", this.team)
-            assertEquals(1, this.game)
-            assertEquals(true, this.win)
-            assertEquals(true, this.home)
-            assertEquals(240, this.mp)
-            assertEquals(48, this.fg)
-            assertEquals(89, this.fga)
-            assertEquals(0.539, this.fgp)
-            assertEquals(0, this.tp)
-            assertEquals(0, this.tpa)
-            assertEquals(0.0, this.tpp)
-            assertEquals(13, this.ft)
-            assertEquals(15, this.fta)
-            assertEquals(0.867, this.ftp)
-            assertEquals(12, this.orb)
-            assertEquals(31, this.drb)
-            assertEquals(43, this.trb)
-            assertEquals(30, this.ast)
-            assertEquals(5, this.stl)
-            assertEquals(9, this.blk)
-            assertEquals(17, this.tov)
-            assertEquals(24, this.pf)
-            assertEquals(109, this.pts)
-        }
         assertEquals(6, resultJson.size)
         resultJson.forEach { c: ChampionsModel ->
             assertEquals(1980, c.year)
@@ -120,112 +95,112 @@ class ApiIntegrationTests {
     @Test
     fun `test games-year-wins`() {
         given().header(authorizationHeader)
-                .get(Paths.Games.WINS.replace(":year", "1980"))
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.WINS.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
     }
 
     @Test
     fun `test games-year-wins if year is not in the acceptable range`() {
         val resultStr = given().header(authorizationHeader)
-                .get(Paths.Games.WINS.replace(":year", "1979"))
-                .then()
-                .statusCode(404)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.WINS.replace(":year", "1979"))
+            .then()
+            .statusCode(404)
+            .extract()
+            .body()
+            .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test games-year-losses`() {
         given().header(authorizationHeader)
-                .get(Paths.Games.LOSSES.replace(":year", "1980"))
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.LOSSES.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
     }
 
     @Test
     fun `test games-year-losses if year is not in the acceptable range`() {
         val resultStr = given().header(authorizationHeader)
-                .get(Paths.Games.WINS.replace(":year", "2364"))
-                .then()
-                .statusCode(404)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.WINS.replace(":year", "2364"))
+            .then()
+            .statusCode(404)
+            .extract()
+            .body()
+            .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test games-year-home`() {
         given().header(authorizationHeader)
-                .get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
     }
 
     @Test
     fun `test games-year-home if year is not in the acceptable range`() {
         println(this.authenticationToken)
         val resultStr = given().header(authorizationHeader)
-                .get(Paths.Games.WINS.replace(":year", "1901"))
-                .then()
-                .statusCode(404)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.WINS.replace(":year", "1901"))
+            .then()
+            .statusCode(404)
+            .extract()
+            .body()
+            .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test games-year-away`() {
         given().header(authorizationHeader)
-                .get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
     }
 
     @Test
     fun `test games-year-away if year is not in the acceptable range`() {
         val resultStr = given().header(authorizationHeader)
-                .get(Paths.Games.WINS.replace(":year", "1931"))
-                .then()
-                .statusCode(404)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.Games.WINS.replace(":year", "1931"))
+            .then()
+            .statusCode(404)
+            .extract()
+            .body()
+            .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test healthcheck`() {
         given().get(Paths.healthCheck)
-                .then()
-                .statusCode(200)
+            .then()
+            .statusCode(200)
     }
 
     @Test
     fun `test getYears`() {
         val resultStr = given().header(authorizationHeader)
-                .get(Paths.getYears)
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.getYears)
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
         val t: TypeReference<YearsResponse> = object : TypeReference<YearsResponse>() {}
         val resultJson: YearsResponse = jackson.readValue<YearsResponse>(resultStr, t)
         with(resultJson.years) {
@@ -244,12 +219,12 @@ class ApiIntegrationTests {
     @Test
     fun `test getTeams`() {
         val resultStr = given().header(authorizationHeader)
-                .get(Paths.getTeams)
-                .then()
-                .statusCode(200)
-                .extract()
-                .body()
-                .asString()
+            .get(Paths.getTeams)
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
         val t: TypeReference<TeamsResponse> = object : TypeReference<TeamsResponse>() {}
         val resultJson: TeamsResponse = jackson.readValue<TeamsResponse>(resultStr, t)
         with(resultJson.teams) {
@@ -267,13 +242,60 @@ class ApiIntegrationTests {
         }
     }
 
+    @Test
+    fun `test games by id`() {
+        val resultStr = given().header(authorizationHeader)
+            .get(Paths.Games.GAME.replace(":${PathParameters.GAME_ID}", "1"))
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .asString()
+        val t: TypeReference<ChampionsModel> = object : TypeReference<ChampionsModel>() {}
+        val resultJson: ChampionsModel = jackson.readValue<ChampionsModel>(resultStr, t)
+        with(resultJson) {
+            assertEquals(1980, this.year)
+            assertEquals("Lakers", this.team)
+            assertEquals(1, this.game)
+            assertEquals(true, this.win)
+            assertEquals(true, this.home)
+            assertEquals(240, this.mp)
+            assertEquals(48, this.fg)
+            assertEquals(89, this.fga)
+            assertEquals(0.539, this.fgp)
+            assertEquals(0, this.tp)
+            assertEquals(0, this.tpa)
+            assertEquals(0.0, this.tpp)
+            assertEquals(13, this.ft)
+            assertEquals(15, this.fta)
+            assertEquals(0.867, this.ftp)
+            assertEquals(12, this.orb)
+            assertEquals(31, this.drb)
+            assertEquals(43, this.trb)
+            assertEquals(30, this.ast)
+            assertEquals(5, this.stl)
+            assertEquals(9, this.blk)
+            assertEquals(17, this.tov)
+            assertEquals(24, this.pf)
+            assertEquals(109, this.pts)
+        }
+    }
+
+    @Test
+    fun `test games by id if bad request`() {
+        given().header(authorizationHeader)
+            .get(Paths.Games.GAME.replace(":${PathParameters.GAME_ID}", "bad"))
+            .then()
+            .statusCode(400)
+    }
+
 
     @Test
     fun `test getGamesByTeam with missing payload`() {
         given().header(authorizationHeader)
-                .get(Paths.getGamesByTeam)
-                .then()
-                .statusCode(500)
+            .get(Paths.getGamesByTeam)
+            .then()
+            .statusCode(500)
     }
 
 //    @Test
