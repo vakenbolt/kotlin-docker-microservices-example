@@ -18,7 +18,7 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-data class Jwt(val token: String, val transientUserSubject: String)
+data class Jwt(val token: String, val userId: Long)
 
 
 class JwtModule : AbstractModule() {
@@ -45,8 +45,8 @@ class JwtAuthentication @Inject constructor(private val serverConfig: ServerConf
         } else {
             try {
                 val token = authorizationHeader.replace("Bearer ", "").trim()
-                if (!isTokenWhiteListed(token)) throw WhiteListAuthenticationException()
                 val jwtSubject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
+                if (!isTokenWhiteListed(jwtSubject)) throw WhiteListAuthenticationException()
                 ctx.put(AUTHENTICATED_JWT_SUBJECT, jwtSubject).next()
             } catch (e: Exception) {
                 logger.error(e)
@@ -55,29 +55,27 @@ class JwtAuthentication @Inject constructor(private val serverConfig: ServerConf
         }
     }
 
-    fun createJwt(): Jwt {
+    fun createJwt(userId: Long): Jwt {
         val expirationInstant = Instant.now().plus(serverConfig.jwt_expiration_time_seconds.toLong(), ChronoUnit.SECONDS)
-        val transientUserSubject = createTransientUserSubject()
         val jwt = Jwts.builder()
-                .setSubject(createTransientUserSubject())
+                .setSubject(userId.toString())
                 .setExpiration(Date.from(expirationInstant))
                 .signWith(secretKey).compact()
-        return Jwt(jwt, transientUserSubject)
+        return Jwt(jwt, userId)
     }
 
-    fun whiteListToken(token: String, transientUserSubject: String) {
+    fun whiteListToken(jwt: Jwt) {
         redis.use { redis ->
-            redis.set(token, transientUserSubject, SetParams().ex(serverConfig.jwt_expiration_time_seconds).nx())
+            val key: String = "user:${jwt.userId}"
+            redis.set(key, jwt.token, SetParams().ex(serverConfig.jwt_expiration_time_seconds).nx())
         }
     }
 
-    fun isTokenWhiteListed(token: String): Boolean {
+    fun isTokenWhiteListed(jwtSubject: String): Boolean {
         return redis.use { redis ->
-            redis.get(token)
+            redis.get("user:${jwtSubject.toLong()}")
         }.let { result -> result != null }
     }
-
-    private fun createTransientUserSubject(): String = "user:${Instant.now().toEpochMilli()}"
 }
 
 class WhiteListAuthenticationException() : Exception()

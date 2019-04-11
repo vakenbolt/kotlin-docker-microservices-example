@@ -8,6 +8,8 @@ interface UsersDAO {
     @SqlUpdate("INSERT INTO users (username, password_hash) VALUES (:username, :password_hash)")
     fun insertUser(@Bind("username") username: String, @Bind("password_hash") password: String) : Int
 
-    @SqlQuery("SELECT password_hash from users where username=:username")
-    fun authenticateUser(@Bind("username") username: String) : String?
+    @SqlQuery("SELECT id, password_hash from users where username=:username")
+    fun selectUserByUsername(@Bind("username") username: String) : User?
 }
+
+data class User(val id: Long, val passwordHash: String)
