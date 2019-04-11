@@ -29,7 +29,9 @@ class NBAFinalsApiVerticle @Inject constructor(@Named(ServerConfigPropertyKeys.P
                         }
                     }
                 }
-        this.httpRouter.route("/").blockingHandler { ctx -> ctx.response().end() }
+        //useful for container environments where the root path is used for health checks
+        if (SystemEnvironment.isRootPathAvailable)
+            this.httpRouter.route("/").blockingHandler { ctx -> ctx.response().end() }
     }
 
     override fun stop(stopFuture: Future<Void>?) {
