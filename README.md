@@ -76,7 +76,7 @@ $ docker-compose up
 
 <a name="jwt_hmac"/>
 
-#### JWT HMAC Key Generator Module:
+### JWT HMAC Key Generator Module:
 The `hmac-sha-keygen` module is available to create keys that are compatible with the encryption settings on the API server. The key used by the API server for encrypting JWT tokens is called `jwtKey` in the API server configuration file.
 
 To generate a new key:
@@ -163,3 +163,41 @@ curl -i http://localhost:8080/healthCheck
 HTTP/1.1 200 OK
 content-length: 0
 ```
+
+### Architecture:
+
+#### Security
+**MySQL:**
+The `docker-compose` file instructs MySQL to auto-generate the _root_ password and not expose it.  A non-root user called `nba_finals_db` is created instead. MySQL is configured via startup SQL scripts located in `configs/docker-entrypoint-initdb.d`. The `nba_finals_db` user is _not_ used to connect to the database from the API Server. This is accomplished with the `nba_finals_service` user which is created in the `3_create_mysql_users_and_roles.sql` script.
+  >**Important Note:**  The `nba_finals_service` user has _very_ limited permissions. It is _only_ allowed to `SELECT` on all tables in the `champions` database except for the `user` table on which it can perform an `INSERT`.
+
+
+ **JWT:**
+ [Tokens](https://jwt.io/) are signed with HS512 and used for authentication and accessing secure endpoints. Once a token is granted, it is white-listed in Redis. The life-cycle of the Redis key is equal to the expiration time associated with the token. This ensures that an expired token is automatically removed from the white-list. Only tokens granted by the API server will be honored for authentication and verification.
+
+
+#### Endpoints and Resolvers:
+The code revolves around the concept of **Endpoint Handlers** and **Resolvers**. An endpoint handler is responsible for extracting and validating all of the information that a resolver would need to execute the request. For example, `AuthenticationEndpoint` parses the request and calls an `AuthenticationResolver` to execute _(or resolve)_ the request. Dependency injection is used to connect endpoint handlers to resolvers. Endpoints implement the `Endpoint` interface and are provided using Guice's `Multibinder`. All resolver functions return a `ResolverResponse<T>` which contains the response payload and status code.
+
+#### Responder:
+Every `Endpoint` has a `Responder` injected as a dependency used to handle API responses. The Responder takes care of routing paths and invoking the resolver function. The `Responder` will catch and handle any exceptions that occur within the resolver function.
+
+#### Localization:
+Localized error messages are provided via the `localized_exception_messages` resource bundle located in the `resources` folder in `web-api`. Localized messages are available via the `ApiException` which is provided by the `ApiExceptionFactory` class.
+>Note: Localization is currently not supported for JSR-303 annotations. These will be provided later via configurations available in the Hibernate Validation Library.
+
+#### Dependency Injection:
+Dependency injection is provided via the Google Guice library. There is only one (and _only_ one) injector used to provide an instance. This injector kicks off the whole dependency graph and makes the application available for use. The injector is found in the `main` function in `NBAFinalsApiServer.kt`. Guice Modules are also added in the `main` function. Below is a list of the Guice modules used in the API server.
+
+Module | Description
+------------ | ------------
+DaoModule | Provides JDBI data access objects.
+EndpointsModule | Provides all of the Endpoint Handlers.
+HikariModule | Provides HikarCP database connection pool.
+HttpServerModule | Provides Vertx HTTP Server.
+JacksonModule | Provides Jackson's `ObjectMapper` for serializing/de-serializing JSON objects.
+JdbiModule | Provides JDBI with SqlObject and Kotlin native support.
+JwtModule | Provides the `JwtAuthentication` class used to handle JWT authentication.
+LocalizationModule | Provides localization support
+RedisModule | Provides Redis connectivity via the `Jedis` library
+ServerConfigModule | Provides the `ServerConfig` class.

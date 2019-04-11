@@ -11,8 +11,6 @@ import org.apache.logging.log4j.LogManager
 import javax.inject.Inject
 
 
-data class RouteStatusCodes(val fail: Int, val success: Int)
-
 enum class EndpointRouteSecurity {
     UN_SECURED,
     SECURED
