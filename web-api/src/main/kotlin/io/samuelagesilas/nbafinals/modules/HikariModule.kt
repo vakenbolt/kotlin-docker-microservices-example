@@ -17,6 +17,7 @@ class HikariModule: AbstractModule() {
         hikariConfig.jdbcUrl = String.format("jdbc:mysql://%s:%d/", serverConfig.dbHost, serverConfig.dbPort)
         hikariConfig.username = serverConfig.dbUsername
         hikariConfig.password = serverConfig.dbPassword
+        hikariConfig.catalog = serverConfig.useDatabase
         hikariConfig.addDataSourceProperty(ServerConfigPropertyKeys.MYSQL_CACHE_PREP_STATEMENTS, serverConfig.mySqlConfig.cachePrepStmts)
         hikariConfig.addDataSourceProperty(ServerConfigPropertyKeys.MYSQL_VERIFY_SERVER_CERTIFICATE, serverConfig.mySqlConfig.verifyServerCertificate)
         hikariConfig.addDataSourceProperty(ServerConfigPropertyKeys.MYSQL_USE_SSL, serverConfig.mySqlConfig.useSSL)
