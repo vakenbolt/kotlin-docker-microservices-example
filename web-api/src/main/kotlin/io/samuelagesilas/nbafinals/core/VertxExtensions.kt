@@ -21,7 +21,11 @@ fun RoutingContext.locale(): Locale {
 inline fun <reified T> RoutingContext.getPayload(): T {
     val typeReference: TypeReference<T> = object : TypeReference<T>() {}
     check(bodyAsString == null) { throw ApiException(BAD_REQUEST) }
-    val typedPayload = JacksonModule.jacksonObjectMapper.readValue<T>(this.bodyAsString, typeReference)
+    val typedPayload = try {
+        JacksonModule.jacksonObjectMapper.readValue<T>(this.bodyAsString, typeReference)
+    } catch (e:Exception) {
+        throw ApiException(BAD_REQUEST)
+    }
     val validationResponse = try {
          Validator.validator.validate(typedPayload)
     } catch (e: Exception) {

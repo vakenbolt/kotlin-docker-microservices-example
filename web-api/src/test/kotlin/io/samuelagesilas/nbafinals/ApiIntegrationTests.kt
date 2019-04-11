@@ -12,6 +12,7 @@ import io.samuelagesilas.nbafinals.endpoints.*
 import io.samuelagesilas.nbafinals.models.ChampionsModel
 import io.samuelagesilas.nbafinals.modules.LocalizationManager
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -21,6 +22,9 @@ import java.util.*
 
 @TestInstance(Lifecycle.PER_CLASS)
 class ApiIntegrationTests {
+
+    private val testUsername = "TestUser" + Instant.now().toEpochMilli()
+    private val testPassword = "testing123!"
 
     companion object {
         private val jackson = jacksonObjectMapper()
@@ -40,7 +44,7 @@ class ApiIntegrationTests {
     fun getAuthenticationToken() {
         val t: TypeReference<AuthenticationResponse> = object : TypeReference<AuthenticationResponse>() {}
         val resultStr = given()
-                .body(UserSignUpRequest(username = "TestUser" + Instant.now(), password = "testing123!"))
+                .body(UserSignUpRequest(testUsername, testPassword))
                 .post(Paths.signUp)
                 .then()
                 .statusCode(201)
@@ -51,6 +55,21 @@ class ApiIntegrationTests {
         this.authenticationToken = authenticationResponse.bearer
         this.authorizationHeader = Header("Authorization", "Bearer $authenticationToken")
 
+    }
+
+    @Test
+    fun `test authentication`() {
+        val resultStr = given()
+                .body(AuthenticationRequest(testUsername, testPassword))
+                .post(Paths.authenticate)
+                .then()
+                .statusCode(201)
+                .extract()
+                .body()
+                .asString()
+        val t: TypeReference<AuthenticationResponse> = object : TypeReference<AuthenticationResponse>() {}
+        val authenticationResponse = jackson.readValue<AuthenticationResponse>(resultStr, t)
+        assertNotNull(authenticationResponse.bearer)
     }
 
     @Test
@@ -295,17 +314,17 @@ class ApiIntegrationTests {
         given().header(authorizationHeader)
             .get(Paths.getGamesByTeam)
             .then()
-            .statusCode(500)
+            .statusCode(400)
     }
 
-//    @Test
-//    fun `test getGamesByTeam with team not in champions table`() {
-//        val resultStr = given()
-//            .body(TeamRequest("Space Jams"))
-//            .get(Paths.getGamesByTeam)
-//            .then()
-//            .statusCode(500)
-//    }
+    @Test
+    fun `test getGamesByTeam with team not in champions table`() {
+        val resultStr = given().header(authorizationHeader)
+            .body(TeamRequest("Space Jams"))
+            .get(Paths.getGamesByTeam)
+            .then()
+            .statusCode(404)
+    }
 
     @Test
     fun `test getGamesByTeam`() {
@@ -325,5 +344,46 @@ class ApiIntegrationTests {
             assertEquals(index + 1, championsModel.game)
             assertEquals(240, championsModel.mp)
         }
+    }
+
+    @Test
+    fun `test selectAllGamesByYearAndTeamName`() {
+        val resultStr = given().header(authorizationHeader)
+                .body(TeamYearRequest("Lakers", 1980))
+                .get(Paths.getGamesByTeamAndYear)
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
+        val t: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
+        val resultJson: List<ChampionsModel> = jackson.readValue<List<ChampionsModel>>(resultStr, t)
+        resultJson.forEach { championsModel ->
+            assertEquals("Lakers", championsModel.team)
+        }
+        assertEquals(6, resultJson.size)
+    }
+
+    @Test
+    fun `test selectAllGamesByYearAndTeamName with missing payload`() {
+        given().header(authorizationHeader)
+                .get(Paths.getGamesByTeamAndYear)
+                .then()
+                .statusCode(400)
+    }
+
+    @Test
+    fun `test selectAllGamesByYearAndTeamName if request is malformed`() {
+        given().header(authorizationHeader)
+                .body("""{"year": "1980"}""")
+                .get(Paths.getGamesByTeamAndYear)
+                .then()
+                .statusCode(400)
+
+        given().header(authorizationHeader)
+                .body("{}")
+                .get(Paths.getGamesByTeamAndYear)
+                .then()
+                .statusCode(400)
     }
 }

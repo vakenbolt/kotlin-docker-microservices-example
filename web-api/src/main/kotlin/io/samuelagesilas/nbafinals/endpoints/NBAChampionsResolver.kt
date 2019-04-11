@@ -34,7 +34,7 @@ class NBAChampionsResolver @Inject constructor(private val championsDAO: Champio
         return ResolverResponse(result)
     }
 
-    fun selectGameById(id: Int, locale: Locale) : ResolverResponse<ChampionsModel> {
+    fun selectGameById(id: Int, locale: Locale): ResolverResponse<ChampionsModel> {
         val result = championsDAO.selectGameById(id)
         check(result == null) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
@@ -61,15 +61,19 @@ class NBAChampionsResolver @Inject constructor(private val championsDAO: Champio
 
     fun selectAllAwayGamesByYear(year: Int, locale: Locale): ResolverResponse<List<ChampionsModel>> {
         val result = championsDAO.selectAllAwayGamesByYear(year)
-            check(result.isEmpty()) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        check(result.isEmpty()) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
     }
 
-    fun selectAllGamesByTeamName(team: String): ResolverResponse<List<ChampionsModel>> {
-        return ResolverResponse(championsDAO.selectAllGamesByTeamName(team))
+    fun selectAllGamesByTeamName(team: String, locale:Locale): ResolverResponse<List<ChampionsModel>> {
+        val result = championsDAO.selectAllGamesByTeamName(team)
+        check(result.isEmpty()) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        return ResolverResponse(result)
     }
 
-    fun selectAllGamesByYearAndTeamName(team: String, year: Int): ResolverResponse<List<ChampionsModel>> {
-        return ResolverResponse(championsDAO.selectAllGamesByTeamNameAndYear(team, year))
+    fun selectAllGamesByYearAndTeamName(team: String, year: Int, locale:Locale): ResolverResponse<List<ChampionsModel>> {
+        val result = championsDAO.selectAllGamesByTeamNameAndYear(team, year)
+        check(result.isEmpty()) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        return ResolverResponse(result)
     }
 }

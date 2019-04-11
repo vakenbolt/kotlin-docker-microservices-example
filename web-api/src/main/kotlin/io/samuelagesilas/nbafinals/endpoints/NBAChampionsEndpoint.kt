@@ -21,11 +21,11 @@ class NBAChampionsEndpoint @Inject constructor(respond: Responder,
         respond.to(Paths.Games.AWAY_GAMES) { ctx -> resolver.selectAllAwayGamesByYear(getYear(ctx), ctx.locale()) }
         respond.to(Paths.getGamesByTeam) { ctx ->
             val team: String = ctx.getPayload<TeamRequest>().team
-            resolver.selectAllGamesByTeamName(team)
+            resolver.selectAllGamesByTeamName(team, ctx.locale())
         }
         respond.to(Paths.getGamesByTeamAndYear) { ctx ->
             val req = ctx.getPayload<TeamYearRequest>()
-            resolver.selectAllGamesByYearAndTeamName(req.team, req.year)
+            resolver.selectAllGamesByYearAndTeamName(req.team, req.year, ctx.locale())
         }
     }
 

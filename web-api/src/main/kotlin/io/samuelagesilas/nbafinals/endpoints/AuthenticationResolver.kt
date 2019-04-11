@@ -20,7 +20,7 @@ class AuthenticationResolver @Inject constructor(private val usersDAO: UsersDAO,
     fun authenticate(username: String, password: String): ResolverResponse<AuthenticationResponse> {
         val hashedPassword = usersDAO.authenticateUser(username)
         check(hashedPassword == null) { throw apiException.create(UNAUTHORIZED) }
-        check(SCryptUtil.check(password, hashedPassword)) { throw apiException.create(UNAUTHORIZED) }
+        check(!SCryptUtil.check(password, hashedPassword)) { throw apiException.create(UNAUTHORIZED) }
         val jwt = jwtAuthentication.createJwt()
         jwtAuthentication.whiteListToken(jwt.token, jwt.transientUserSubject)
         return ResolverResponse(data = AuthenticationResponse(jwt.token), status = HttpResponseStatus.CREATED)
