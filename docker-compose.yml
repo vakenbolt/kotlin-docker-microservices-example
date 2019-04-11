@@ -15,11 +15,11 @@ services:
       MYSQL_DATABASE: nba_finals
       MYSQL_USER: nba_finals_service
       MYSQL_PASSWORD: ilovethisgame
+    ports:
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./configs/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro  #:ro = Read Only
-    ports:
-      - "3306:3306"
 volumes:
   mysql_data:
     driver: local
