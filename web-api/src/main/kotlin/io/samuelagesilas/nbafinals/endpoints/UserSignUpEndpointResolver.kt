@@ -5,6 +5,7 @@ import io.samuelagesilas.nbafinals.core.ApiExceptionFactory
 import io.samuelagesilas.nbafinals.core.Keys
 import io.samuelagesilas.nbafinals.core.ResolverResponse
 import io.samuelagesilas.nbafinals.core.check
+import io.samuelagesilas.nbafinals.dao.User
 import io.samuelagesilas.nbafinals.dao.UsersDAO
 import io.samuelagesilas.nbafinals.modules.JwtAuthentication
 import org.apache.logging.log4j.LogManager
@@ -33,9 +34,12 @@ class UserSignUpEndpointResolver @Inject constructor(private val jwtAuthenticati
     val logger = LogManager.getLogger(UserSignUpEndpointResolver::class.java)
 
     fun signUpUser(username: String, passwordHash: String, locale: Locale): ResolverResponse<AuthenticationResponse> {
-        var result = 0
+        var updateCount = 0
+        var user: User? = null
         try {
-            result = usersDao.insertUser(username, passwordHash)
+            updateCount = usersDao.insertUser(username, passwordHash)
+            user = usersDao.selectUserByUsername(username)
+
         } catch (e: UnableToExecuteStatementException) {
             when (e.cause != null) {
                 (e.cause is SQLIntegrityConstraintViolationException) -> {
@@ -45,9 +49,10 @@ class UserSignUpEndpointResolver @Inject constructor(private val jwtAuthenticati
             }
             logger.error(e)
         }
-        check(result < 1) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
-        val jwt = jwtAuthentication.createJwt()
-        jwtAuthentication.whiteListToken(jwt.token, jwt.transientUserSubject)
+        check(updateCount < 1) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
+        check(user == null) { throw apiException.create(INTERNAL_SERVER_ERROR) }
+        val jwt = jwtAuthentication.createJwt(user!!.id)
+        jwtAuthentication.whiteListToken(jwt)
         return ResolverResponse(AuthenticationResponse(bearer = jwt.token), status = CREATED)
     }
 }
