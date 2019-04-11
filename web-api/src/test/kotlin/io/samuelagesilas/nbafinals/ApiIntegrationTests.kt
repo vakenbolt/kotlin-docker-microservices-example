@@ -75,13 +75,13 @@ class ApiIntegrationTests {
     @Test
     fun `test games-year`() {
         val resultStr = given().header(authorizationHeader)
-            .header("Accept-Language", "en")
-            .get(Paths.Games.GAMES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .header("Accept-Language", "en")
+                .get(Paths.Games.GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<List<ChampionsModel>> = object : TypeReference<List<ChampionsModel>>() {}
         val resultJson: List<ChampionsModel> = jackson.readValue<List<ChampionsModel>>(resultStr, t)
         assertEquals(6, resultJson.size)
@@ -112,114 +112,151 @@ class ApiIntegrationTests {
     }
 
     @Test
+    fun `test unauthorized access of games-year`() {
+        given().get(Paths.Games.GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(401)
+    }
+
+    @Test
     fun `test games-year-wins`() {
         given().header(authorizationHeader)
-            .get(Paths.Games.WINS.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.WINS.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
+    }
+
+    @Test
+    fun `test unauthorized access of games-year-wins`() {
+        given().get(Paths.Games.GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(401)
     }
 
     @Test
     fun `test games-year-wins if year is not in the acceptable range`() {
         val resultStr = given().header(authorizationHeader)
-            .get(Paths.Games.WINS.replace(":year", "1979"))
-            .then()
-            .statusCode(404)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.WINS.replace(":year", "1979"))
+                .then()
+                .statusCode(404)
+                .extract()
+                .body()
+                .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test games-year-losses`() {
         given().header(authorizationHeader)
-            .get(Paths.Games.LOSSES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.LOSSES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
+    }
+
+    @Test
+    fun `test unauthorized access of games-year-losses`() {
+        given().get(Paths.Games.LOSSES.replace(":year", "1980"))
+                .then()
+                .statusCode(401)
     }
 
     @Test
     fun `test games-year-losses if year is not in the acceptable range`() {
         val resultStr = given().header(authorizationHeader)
-            .get(Paths.Games.WINS.replace(":year", "2364"))
-            .then()
-            .statusCode(404)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.WINS.replace(":year", "2364"))
+                .then()
+                .statusCode(404)
+                .extract()
+                .body()
+                .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test games-year-home`() {
         given().header(authorizationHeader)
-            .get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
     }
+
+    @Test
+    fun `test unauthorized access of games-year-home`() {
+        given().get(Paths.Games.HOME_GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(401)
+    }
+
 
     @Test
     fun `test games-year-home if year is not in the acceptable range`() {
         println(this.authenticationToken)
         val resultStr = given().header(authorizationHeader)
-            .get(Paths.Games.WINS.replace(":year", "1901"))
-            .then()
-            .statusCode(404)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.WINS.replace(":year", "1901"))
+                .then()
+                .statusCode(404)
+                .extract()
+                .body()
+                .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test games-year-away`() {
         given().header(authorizationHeader)
-            .get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
     }
+
+    @Test
+    fun `test unauthorized access of games-year-away`() {
+        given().get(Paths.Games.AWAY_GAMES.replace(":year", "1980"))
+                .then()
+                .statusCode(401)
+    }
+
 
     @Test
     fun `test games-year-away if year is not in the acceptable range`() {
         val resultStr = given().header(authorizationHeader)
-            .get(Paths.Games.WINS.replace(":year", "1931"))
-            .then()
-            .statusCode(404)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.WINS.replace(":year", "1931"))
+                .then()
+                .statusCode(404)
+                .extract()
+                .body()
+                .asString()
         assertErrorMessage(resultStr)
     }
 
     @Test
     fun `test healthcheck`() {
         given().get(Paths.healthCheck)
-            .then()
-            .statusCode(200)
+                .then()
+                .statusCode(200)
     }
 
     @Test
     fun `test getYears`() {
         val resultStr = given().header(authorizationHeader)
-            .get(Paths.getYears)
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.getYears)
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<YearsResponse> = object : TypeReference<YearsResponse>() {}
         val resultJson: YearsResponse = jackson.readValue<YearsResponse>(resultStr, t)
         with(resultJson.years) {
@@ -236,14 +273,22 @@ class ApiIntegrationTests {
     }
 
     @Test
+    fun `test unauthorized access of getYears`() {
+        given().get(Paths.getYears)
+                .then()
+                .statusCode(401)
+    }
+
+
+    @Test
     fun `test getTeams`() {
         val resultStr = given().header(authorizationHeader)
-            .get(Paths.getTeams)
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.getTeams)
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<TeamsResponse> = object : TypeReference<TeamsResponse>() {}
         val resultJson: TeamsResponse = jackson.readValue<TeamsResponse>(resultStr, t)
         with(resultJson.teams) {
@@ -262,14 +307,22 @@ class ApiIntegrationTests {
     }
 
     @Test
+    fun `test unauthorized access of getTeams`() {
+        given().get(Paths.getTeams)
+                .then()
+                .statusCode(401)
+    }
+
+
+    @Test
     fun `test games by id`() {
         val resultStr = given().header(authorizationHeader)
-            .get(Paths.Games.GAME.replace(":${PathParameters.GAME_ID}", "1"))
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString()
+                .get(Paths.Games.GAME.replace(":${PathParameters.GAME_ID}", "1"))
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString()
         val t: TypeReference<ChampionsModel> = object : TypeReference<ChampionsModel>() {}
         val resultJson: ChampionsModel = jackson.readValue<ChampionsModel>(resultStr, t)
         with(resultJson) {
@@ -301,29 +354,36 @@ class ApiIntegrationTests {
     }
 
     @Test
+    fun `test unauthorized access of games by id`() {
+        given().get(Paths.Games.GAME.replace(":${PathParameters.GAME_ID}", "1"))
+                .then()
+                .statusCode(401)
+    }
+
+    @Test
     fun `test games by id if bad request`() {
         given().header(authorizationHeader)
-            .get(Paths.Games.GAME.replace(":${PathParameters.GAME_ID}", "bad"))
-            .then()
-            .statusCode(400)
+                .get(Paths.Games.GAME.replace(":${PathParameters.GAME_ID}", "bad"))
+                .then()
+                .statusCode(400)
     }
 
 
     @Test
     fun `test getGamesByTeam with missing payload`() {
         given().header(authorizationHeader)
-            .get(Paths.getGamesByTeam)
-            .then()
-            .statusCode(400)
+                .get(Paths.getGamesByTeam)
+                .then()
+                .statusCode(400)
     }
 
     @Test
     fun `test getGamesByTeam with team not in champions table`() {
         val resultStr = given().header(authorizationHeader)
-            .body(TeamRequest("Space Jams"))
-            .get(Paths.getGamesByTeam)
-            .then()
-            .statusCode(404)
+                .body(TeamRequest("Space Jams"))
+                .get(Paths.getGamesByTeam)
+                .then()
+                .statusCode(404)
     }
 
     @Test
@@ -347,6 +407,14 @@ class ApiIntegrationTests {
     }
 
     @Test
+    fun `test unauthorized access of getGamesByTeam`() {
+        given().body(TeamRequest("Cavaliers"))
+                .get(Paths.getGamesByTeam)
+                .then()
+                .statusCode(401)
+    }
+
+    @Test
     fun `test selectAllGamesByYearAndTeamName`() {
         val resultStr = given().header(authorizationHeader)
                 .body(TeamYearRequest("Lakers", 1980))
@@ -362,6 +430,14 @@ class ApiIntegrationTests {
             assertEquals("Lakers", championsModel.team)
         }
         assertEquals(6, resultJson.size)
+    }
+
+    @Test
+    fun `test unauthorized access of selectAllGamesByYearAndTeamName`() {
+        given().body(TeamYearRequest("Lakers", 1980))
+                .get(Paths.getGamesByTeamAndYear)
+                .then()
+                .statusCode(401)
     }
 
     @Test
