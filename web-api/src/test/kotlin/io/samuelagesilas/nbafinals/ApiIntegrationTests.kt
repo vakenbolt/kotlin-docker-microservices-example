@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle
+import java.time.Instant
 import java.util.*
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -37,16 +38,15 @@ class ApiIntegrationTests {
 
     @BeforeAll
     fun getAuthenticationToken() {
-        val req = AuthenticationRequest("Chicago", "Bulls")
-        val resultStr = given().header("Accept-Language", "en")
-            .body(jackson.writeValueAsString(req))
-            .post(Paths.authenticate)
-            .then()
-            .statusCode(201)
-            .extract()
-            .body()
-            .asString()
         val t: TypeReference<AuthenticationResponse> = object : TypeReference<AuthenticationResponse>() {}
+        val resultStr = given()
+                .body(UserSignUpRequest(username = "TestUser" + Instant.now(), password = "testing123!"))
+                .post(Paths.signUp)
+                .then()
+                .statusCode(201)
+                .extract()
+                .body()
+                .asString()
         val authenticationResponse = jackson.readValue<AuthenticationResponse>(resultStr, t)
         this.authenticationToken = authenticationResponse.bearer
         this.authorizationHeader = Header("Authorization", "Bearer $authenticationToken")
