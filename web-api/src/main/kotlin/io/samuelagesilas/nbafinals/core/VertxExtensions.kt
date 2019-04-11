@@ -25,6 +25,6 @@ inline fun <reified T>RoutingContext.getPayload(): T {
 
 fun RoutingContext.fail(statusCode: HttpResponseStatus) = this.fail(statusCode.code())
 
-fun RoutingContext.getTransientUserSubject(statusCode: HttpResponseStatus) : String =  this.get(AUTHENTICATED_JWT_SUBJECT)
+fun RoutingContext.getTransientUserSubject() : String =  this.get(AUTHENTICATED_JWT_SUBJECT)
 
 fun HttpServerResponse.setStatusCode(statusCode: HttpResponseStatus) = this.setStatusCode(statusCode.code())!!
