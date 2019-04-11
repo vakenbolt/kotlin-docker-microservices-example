@@ -36,6 +36,7 @@ export ROOT_PATH_AVAILABLE=TRUE
 >_This is particularly useful if the server will run in container environments where the root path is used for health checks (e.g. Kubernetes on Google Cloud)_
 
 <a name="integration_tests"/>
+
 #### Integration Tests:
 
 1. Start by building the API server and all associated modules.
@@ -64,6 +65,7 @@ $ docker-compose down -v --remove-orphans
 ```
 
 <a name="dev_env"/>
+
 #### Development environment:
 
 1. Tear down the integration `docker-compose down` environment if it is running and bring up the development environment.
@@ -73,6 +75,7 @@ $ docker-compose up
 ```
 
 <a name="jwt_hmac"/>
+
 #### JWT HMAC Key Generator Module:
 The `hmac-sha-keygen` module is available to create keys that are compatible with the encryption settings on the API server. The key used by the API server for encrypting JWT tokens is called `jwtKey` in the API server configuration file.
 
@@ -85,6 +88,7 @@ dQWulnW5AUcrcr288/fzkl4a+Cwb59rWyIA1YRr587CcsbUdrT/iyA3rQGgJNhQLleIDJn5ipzv9z3AS
 ```
 
 <a name="curl_api"/>
+
 #### CURLing the API Server:
 
 Sign up as a new user to get an authentication token.
