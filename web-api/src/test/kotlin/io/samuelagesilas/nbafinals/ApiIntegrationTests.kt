@@ -379,7 +379,7 @@ class ApiIntegrationTests {
 
     @Test
     fun `test getGamesByTeam with team not in champions table`() {
-        val resultStr = given().header(authorizationHeader)
+        given().header(authorizationHeader)
                 .body(TeamRequest("Space Jams"))
                 .get(Paths.getGamesByTeam)
                 .then()
