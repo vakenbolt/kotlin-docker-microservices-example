@@ -11,6 +11,7 @@ import io.samuelagesilas.nbafinals.core.ServerConfigPropertyKeys.JWT_KEY
 import io.samuelagesilas.nbafinals.core.fail
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
+import org.apache.logging.log4j.LogManager
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.params.SetParams
 import java.time.Instant
@@ -38,6 +39,8 @@ class JwtAuthentication @Inject constructor(@Named(JWT_KEY) private val jwtKey: 
                                             @Named(JWT_EXPIRATION_TIME_SECONDS) private val expirationTime: Int,
                                             private val redis: Jedis) : Handler<RoutingContext> {
 
+    private val logger = LogManager.getLogger(JwtAuthentication::class.java)
+
     private val secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey))!!
 
     override fun handle(ctx: RoutingContext) {
@@ -50,9 +53,9 @@ class JwtAuthentication @Inject constructor(@Named(JWT_KEY) private val jwtKey: 
                 val token = authorizationHeader.replace("Bearer ", "").trim()
                 if (!isTokenWhiteListed(token)) throw WhiteListAuthenticationException()
                 val jwtSubject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
-                ctx.put(AUTHENTICATED_JWT_SUBJECT, jwtSubject)
-                        .next()
+                ctx.put(AUTHENTICATED_JWT_SUBJECT, jwtSubject).next()
             } catch (e: Exception) {
+                logger.error(e)
                 ctx.fail(HttpResponseStatus.UNAUTHORIZED)
             }
         }

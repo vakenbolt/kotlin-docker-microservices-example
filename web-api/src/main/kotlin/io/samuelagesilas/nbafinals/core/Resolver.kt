@@ -44,7 +44,7 @@ class Resolver @Inject constructor(private val router: Router,
                 }
 
             } catch (e: Exception) {
-                logger.throwing(e)
+                logger.error(e)
                 var response = ""
                 if (e.message != null)
                     response = objectMapper.writeValueAsString(LocalizedErrorResponse(e.message!!))

@@ -11,7 +11,6 @@ data class AuthenticationResponse(val bearer: String)
 
 class AuthenticationResolver @Inject constructor(private val jwtAuthentication: JwtAuthentication) {
 
-
     fun authenticate(username: String, password: String): ResolverResponse<AuthenticationResponse> {
         return if (username == "Chicago" && password == "Bulls") {
             val jwt = jwtAuthentication.createJwt()
