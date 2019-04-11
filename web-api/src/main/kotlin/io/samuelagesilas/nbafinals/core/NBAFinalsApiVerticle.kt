@@ -20,7 +20,7 @@ class NBAFinalsApiVerticle @Inject constructor(private val serverConfig: ServerC
                 .listen(serverConfig.port) { res: AsyncResult<HttpServer> ->
                     when (res.succeeded()) {
                         true -> {
-                            logger.info("HTTPServer Verticle: $deploymentId successfully deployed")
+                            logger.info("HTTPServer Verticle: $deploymentId successfully deployed listening on ${serverConfig.port}")
                             startFuture!!.complete()
                         }
                         false -> {
