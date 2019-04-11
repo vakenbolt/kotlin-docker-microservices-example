@@ -1,7 +1,8 @@
 package io.samuelagesilas.nbafinals.endpoints
 
 import io.netty.handler.codec.http.HttpResponseStatus
-import io.samuelagesilas.nbafinals.core.ApiException
+import io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED
+import io.samuelagesilas.nbafinals.core.ApiExceptionFactory
 import io.samuelagesilas.nbafinals.core.ResolverResponse
 import io.samuelagesilas.nbafinals.modules.JwtAuthentication
 import javax.inject.Inject
@@ -9,7 +10,8 @@ import javax.inject.Inject
 data class AuthenticationRequest(val username: String, val password: String)
 data class AuthenticationResponse(val bearer: String)
 
-class AuthenticationResolver @Inject constructor(private val jwtAuthentication: JwtAuthentication) {
+class AuthenticationResolver @Inject constructor(private val jwtAuthentication: JwtAuthentication,
+                                                 private val apiException: ApiExceptionFactory) {
 
     fun authenticate(username: String, password: String): ResolverResponse<AuthenticationResponse> {
         return if (username == "Chicago" && password == "Bulls") {
@@ -18,7 +20,7 @@ class AuthenticationResolver @Inject constructor(private val jwtAuthentication: 
             ResolverResponse(data = AuthenticationResponse(jwt.token),
                              status = HttpResponseStatus.CREATED)
         } else {
-            throw ApiException(HttpResponseStatus.UNAUTHORIZED)
+            throw apiException.create(UNAUTHORIZED)
         }
     }
 }

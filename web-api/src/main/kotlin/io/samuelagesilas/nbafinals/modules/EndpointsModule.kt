@@ -6,6 +6,7 @@ import com.google.inject.multibindings.Multibinder
 import io.samuelagesilas.nbafinals.endpoints.AuthenticationEndpoint
 import io.samuelagesilas.nbafinals.endpoints.HealthCheckEndpoint
 import io.samuelagesilas.nbafinals.endpoints.NBAChampionsEndpoint
+import io.samuelagesilas.nbafinals.endpoints.UserSignUpEndpoint
 
 interface Endpoint {}
 
@@ -16,5 +17,6 @@ class EndpointsModule() : AbstractModule() {
         multiBinder.addBinding().to(HealthCheckEndpoint::class.java)
         multiBinder.addBinding().to(NBAChampionsEndpoint::class.java)
         multiBinder.addBinding().to(AuthenticationEndpoint::class.java)
+        multiBinder.addBinding().to(UserSignUpEndpoint::class.java)
     }
 }

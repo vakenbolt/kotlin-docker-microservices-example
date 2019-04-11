@@ -15,6 +15,9 @@ buildscript {
     ext.log4j_version = '2.11.2'
     ext.jjwt_version = '0.10.6'
     ext.jedis_version = '3.1.0-m1'
+    ext.wg_scrypt_version = '1.4.0'
+    ext.hibernate_validator_version = '6.0.16.Final'
+    ext.javax_el_version = '3.0.1-b09'
 
     repositories { jcenter() }
 

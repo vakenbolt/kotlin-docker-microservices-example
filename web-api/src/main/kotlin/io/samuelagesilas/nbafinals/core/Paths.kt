@@ -16,6 +16,7 @@ object Paths {
 
     const val healthCheck: String = "/healthCheck"
     const val authenticate: String = "/authenticate"
+    const val signUp: String = "/signUp"
     const val getYears: String = "/getYears"
     const val getTeams: String = "/getTeams"
     const val getGamesByTeam: String = "/getGamesByTeam"

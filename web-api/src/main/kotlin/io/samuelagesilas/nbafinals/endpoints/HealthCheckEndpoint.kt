@@ -7,15 +7,15 @@ import javax.inject.Inject
 
 
 class HealthCheckEndpoint @Inject constructor(router: Router,
-                                              healthCheckResolver: HealthCheckResolver) : Endpoint {
+                                              resolver: HealthCheckResolver) : Endpoint {
 
     private val mysqlRoute = router.route(Paths.healthCheck)
 
     init {
         mysqlRoute.blockingHandler { ctx ->
             val response = ctx.response()
-            arrayOf(healthCheckResolver.mySqlHealthCheck(),
-                    healthCheckResolver.redisHealthCheck())
+            arrayOf(resolver.mySqlHealthCheck(),
+                    resolver.redisHealthCheck())
                     .let { results ->
                         when (results.contains(false)) {
                             true -> response.setStatusCode(500).end()

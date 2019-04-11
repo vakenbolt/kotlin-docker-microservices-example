@@ -20,11 +20,11 @@ enum class EndpointRouteSecurity {
 
 data class ResolverResponse<T>(val data: T? = null, val status: HttpResponseStatus = OK)
 
-class Resolver @Inject constructor(private val router: Router,
-                                   private val objectMapper: ObjectMapper,
-                                   private val jwtAuthentication: JwtAuthentication) {
+class Responder @Inject constructor(private val router: Router,
+                                    private val objectMapper: ObjectMapper,
+                                    private val jwtAuthentication: JwtAuthentication) {
 
-    private val logger = LogManager.getLogger(Resolver::class.java)
+    private val logger = LogManager.getLogger(Responder::class.java)
 
     fun <T> to(path: String,
                endpointRouteSecurity: EndpointRouteSecurity = EndpointRouteSecurity.SECURED,
@@ -51,7 +51,7 @@ class Resolver @Inject constructor(private val router: Router,
                 if (e is ApiException) {
                     ctx.response().setStatusCode(e.statusCode.code()).end(response)
                 } else {
-                    ctx.response().setStatusCode(INTERNAL_SERVER_ERROR).end(response)
+                    ctx.response().setStatusCode(INTERNAL_SERVER_ERROR).end()
                 }
             }
         }
