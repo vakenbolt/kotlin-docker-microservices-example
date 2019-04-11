@@ -1,0 +1,17 @@
+{
+  "port": 8080,
+  "dbPort": 3306,
+  "dbHost": "nba_finals_mysql_integration",
+  "dbUsername": "nba_finals_service",
+  "dbPassword": "ilovethisgame",
+  "useDatabase": "nba_finals",
+  "mySqlConfig": {
+    "cachePrepStmts": true,
+    "verifyServerCertificate": false,
+    "useSSL": false
+  },
+  "jwtKey": "AEkTvT7oA3JEym4utWvsCyEmqcgJMtbJt2KmiXfYpDLBCNJvL6BaT05H1iDZDG0Mn71Swo1U1dqTajGo32bBYg==",
+  "jwt_expiration_time_seconds": 3600,
+  "redisHost": "nba_finals_redis_integration",
+  "redisPort": 6379
+}

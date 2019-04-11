@@ -27,11 +27,12 @@ services:
       - "redis"
       - "mysql"
     environment:
-      API_CONFIG: "/configs/api_server.integration.properties"
+      API_CONFIG: "/configs/api_server.integration.config.json"
+      ROOT_PATH_AVAILABLE: "true"
     ports:
       - "8080:8080"
     volumes:
-      - ./configs/api_server.integration.properties:/configs/api_server.integration.properties:ro  #:ro = Read Only
+      - ./configs/api_server.integration.config.json:/configs/api_server.integration.config.json:ro  #:ro = Read Only
 volumes:
   mysql_data:
     driver: local
