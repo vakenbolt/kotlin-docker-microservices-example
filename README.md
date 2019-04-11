@@ -16,14 +16,14 @@ A Vertx microservice that provides the winning team statistics for the NBA Final
 
 <a name="requirements"/>
 
-#### Requirements:
+### Requirements:
 - Docker 18.0+
 - Gradle 5.0+
 - Java 1.8+
 
 <a name="configuration"/>
 
-#### Configuration:
+### Configuration:
 1. Export an environment variable called `API_CONFIG` that points to the location of the server configuration JSON file.
 ```bash
 $ export API_CONFIG=<%PATH%>/kotlin-docker-microservices-example/configs/api_server.config.json
@@ -37,7 +37,7 @@ export ROOT_PATH_AVAILABLE=TRUE
 
 <a name="integration_tests"/>
 
-#### Integration Tests:
+### Integration Tests:
 
 1. Start by building the API server and all associated modules.
 ```bash
@@ -66,7 +66,7 @@ $ docker-compose down -v --remove-orphans
 
 <a name="dev_env"/>
 
-#### Development environment:
+### Development environment:
 
 1. Tear down the integration `docker-compose down` environment if it is running and bring up the development environment.
 
@@ -89,7 +89,7 @@ dQWulnW5AUcrcr288/fzkl4a+Cwb59rWyIA1YRr587CcsbUdrT/iyA3rQGgJNhQLleIDJn5ipzv9z3AS
 
 <a name="curl_api"/>
 
-#### CURLing the API Server:
+### CURLing the API Server:
 
 Sign up as a new user to get an authentication token.
 ```bash
