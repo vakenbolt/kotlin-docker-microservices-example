@@ -15,12 +15,14 @@ A Vertx microservice that provides the winning team statistics for the NBA Final
 - [CURLing the API Server](#curl_api)
 
 <a name="requirements"/>
+
 #### Requirements:
 - Docker 18.0+
 - Gradle 5.0+
 - Java 1.8+
 
 <a name="configuration"/>
+
 #### Configuration:
 1. Export an environment variable called `API_CONFIG` that points to the location of the server configuration JSON file.
 ```bash
