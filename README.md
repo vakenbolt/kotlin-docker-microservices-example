@@ -14,7 +14,7 @@ A Vertx microservice that provides the winning team statistics for the NBA Final
 - [JWT HMAC Key Generator Module](#jwt_hmac)
 - [CURLing the API Server](#curl_api)
 
-<a name="headers"/>
+<a name="requirements"/>
 #### Requirements:
 - Docker 18.0+
 - Gradle 5.0+
