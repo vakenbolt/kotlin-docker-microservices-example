@@ -13,7 +13,7 @@ services:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_DATABASE: nba_finals
-      MYSQL_USER: nba_finals_service
+      MYSQL_USER: nba_finals_db
       MYSQL_PASSWORD: ilovethisgame
     ports:
       - "3306:3306"
