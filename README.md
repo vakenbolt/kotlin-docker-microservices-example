@@ -2,8 +2,8 @@
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/The_NBA_Finals_logo.svg/1280px-The_NBA_Finals_logo.svg.png" alt="NBA Finals logo" height="80">
 
-A Vertx microservice that provides the winning team statistics for the NBA Finals(1980-2018). The data set for this example is found [here](https://www.kaggle.com/daverosenman/nba-finals-team-stats/version/6).
->Note: The dataset mentioned above has a couple of spelling errors that are corrected in the imported version for this project. _Swagger docs forthcoming_.
+A Vertx microservice that provides the winning team statistics for the NBA Finals(1980-2018). The data set for this example is found [here](https://www.kaggle.com/daverosenman/nba-finals-team-stats/version/6).  **_Swagger docs forthcoming_**.
+>Note: The dataset mentioned above has a couple of spelling errors that are corrected in the imported version for this project.
 
 
 ##### Table of Contents
