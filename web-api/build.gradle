@@ -23,6 +23,7 @@ dependencies {
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
     compile "org.apache.logging.log4j:log4j-api:$log4j_version"
     compile "org.apache.logging.log4j:log4j-core:$log4j_version"
+    compile "org.apache.logging.log4j:log4j-slf4j18-impl:$log4j_version"
     compile "redis.clients:jedis:$jedis_version"
     compile "com.lambdaworks:scrypt:$wg_scrypt_version"
     compile "org.hibernate.validator:hibernate-validator:$hibernate_validator_version"
