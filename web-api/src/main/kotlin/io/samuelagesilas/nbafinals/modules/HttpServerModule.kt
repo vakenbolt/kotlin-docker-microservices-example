@@ -2,12 +2,17 @@ package io.samuelagesilas.nbafinals.modules
 
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
+import com.zaxxer.hikari.HikariDataSource
+import io.samuelagesilas.nbafinals.core.ApplicationLifeCycle
+import io.samuelagesilas.nbafinals.core.NBAFinalsApiVerticle
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import org.apache.logging.log4j.LogManager
+import redis.clients.jedis.Jedis
 import javax.inject.Singleton
+import javax.sql.DataSource
 
 
 class HttpServerModule : AbstractModule() {
@@ -30,4 +35,22 @@ class HttpServerModule : AbstractModule() {
         router.route().handler(BodyHandler.create())
         return router
     }
+
+
+    @Provides
+    @com.google.inject.Singleton
+    fun providesVertx(): Vertx = Vertx.vertx()
+
+
+    @Provides
+    @Singleton
+    fun providesApplicationLifeCycle(vertx: Vertx,
+                                     verticle: NBAFinalsApiVerticle,
+                                     dataSource: DataSource,
+                                     redis: Jedis) = ApplicationLifeCycle(vertx,
+                                                                          verticle,
+                                                                          dataSource as HikariDataSource,
+                                                                          redis)
+
+
 }

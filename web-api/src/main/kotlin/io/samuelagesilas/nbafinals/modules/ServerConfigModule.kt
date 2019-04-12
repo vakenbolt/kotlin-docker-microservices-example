@@ -7,12 +7,12 @@ import com.google.inject.Provides
 import com.google.inject.Singleton
 import java.io.File
 
-class ServerConfigModule constructor(private val serverConfigFileLocation: String) : AbstractModule() {
+class ServerConfigModule constructor(private val configFileLocation: String) : AbstractModule() {
 
     @Provides
     @Singleton
     fun provides(objectMapper: ObjectMapper): ServerConfig {
-        val configFileContent: String = File(serverConfigFileLocation).readText()
+        val configFileContent: String = File(configFileLocation).readText()
         val typeReference: TypeReference<ServerConfig> = object : TypeReference<ServerConfig>() {}
         return objectMapper.readValue<ServerConfig>(configFileContent, typeReference)
     }

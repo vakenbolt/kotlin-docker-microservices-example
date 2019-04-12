@@ -6,7 +6,9 @@ import io.vertx.core.http.HttpServer
 import io.vertx.ext.web.Router
 import org.apache.logging.log4j.LogManager
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NBAFinalsApiVerticle @Inject constructor(private val serverConfig: ServerConfig,
                                                private val httpServer: HttpServer,
                                                private val httpRouter: Router) : AbstractVerticle() {
