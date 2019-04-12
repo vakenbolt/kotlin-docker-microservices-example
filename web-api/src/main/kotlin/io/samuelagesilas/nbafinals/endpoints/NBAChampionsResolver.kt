@@ -1,12 +1,9 @@
 package io.samuelagesilas.nbafinals.endpoints
 
 import io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND
-import io.samuelagesilas.nbafinals.core.ApiExceptionFactory
-import io.samuelagesilas.nbafinals.core.Keys
-import io.samuelagesilas.nbafinals.core.ResolverResponse
+import io.samuelagesilas.nbafinals.core.*
 import io.samuelagesilas.nbafinals.dao.ChampionsDAO
 import io.samuelagesilas.nbafinals.models.ChampionsModel
-import io.samuelagesilas.nbafinals.core.check
 import java.util.*
 import javax.inject.Inject
 
@@ -38,7 +35,6 @@ class NBAChampionsResolver @Inject constructor(private val championsDAO: Champio
         val result = championsDAO.selectGameById(id)
         check(result == null) { throw apiException.create(NOT_FOUND, locale, Keys.NO_RECORDS_FOUND) }
         return ResolverResponse(result)
-
     }
 
     fun selectAllGamesWonByYear(year: Int, locale: Locale): ResolverResponse<List<ChampionsModel>> {

@@ -1,6 +1,6 @@
 package io.samuelagesilas.nbafinals.models
 
-data class ChampionsModel(val id: String,
+data class ChampionsModel(val id: Int,
                           val year: Int,
                           val team: String,
                           val game: Int,
