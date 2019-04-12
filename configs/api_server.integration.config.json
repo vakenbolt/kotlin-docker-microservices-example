@@ -13,5 +13,6 @@
   "jwtKey": "AEkTvT7oA3JEym4utWvsCyEmqcgJMtbJt2KmiXfYpDLBCNJvL6BaT05H1iDZDG0Mn71Swo1U1dqTajGo32bBYg==",
   "jwt_expiration_time_seconds": 3600,
   "redisHost": "nba_finals_redis_integration",
-  "redisPort": 6379
+  "redisPort": 6379,
+  "shutdownTimeoutSeconds": 5000
 }
