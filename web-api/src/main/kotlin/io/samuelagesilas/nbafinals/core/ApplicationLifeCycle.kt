@@ -17,12 +17,11 @@ class ApplicationLifeCycle(val vertx: Vertx,
             with(ApiServerShutdown(verticle, vertx), ::runThreadAndWait)
             with(HikariShutdown(dataSource), ::runThreadAndWait)
             with(RedisShutdown(redis), ::runThreadAndWait)
-
         }
 
-        private fun runThreadAndWait(t: Thread) {
-            t.start()
-            t.join(5000)
+        private fun runThreadAndWait(thread: Thread) {
+            thread.start()
+            thread.join(5000)
         }
     }
 }
