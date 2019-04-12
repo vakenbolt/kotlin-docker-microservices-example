@@ -49,6 +49,9 @@ test {
     if (System.properties['test.profile'] != 'integration') {
         exclude '**/*IntegrationTest*'
     }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 jar {
