@@ -199,7 +199,6 @@ class ApiIntegrationTests {
 
     @Test
     fun `test games-year-home if year is not in the acceptable range`() {
-        println(this.authenticationToken)
         val resultStr = given().header(authorizationHeader)
                 .get(Paths.Games.WINS.replace(":year", "1901"))
                 .then()

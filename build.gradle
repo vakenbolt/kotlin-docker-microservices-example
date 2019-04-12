@@ -18,6 +18,7 @@ buildscript {
     ext.wg_scrypt_version = '1.4.0'
     ext.hibernate_validator_version = '6.0.16.Final'
     ext.javax_el_version = '3.0.1-b09'
+    ext.mockito_kotlin_version = '1.6.0'
 
     repositories { jcenter() }
 

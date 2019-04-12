@@ -32,6 +32,7 @@ dependencies {
     runtime "io.jsonwebtoken:jjwt-impl:$jjwt_version"
     runtime "io.jsonwebtoken:jjwt-jackson:$jjwt_version"
 
+    testImplementation "com.nhaarman:mockito-kotlin:$mockito_kotlin_version"
     testImplementation "io.rest-assured:rest-assured:$rest_assured"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
@@ -47,6 +48,9 @@ test {
     useJUnitPlatform()
     if (System.properties['test.profile'] != 'integration') {
         exclude '**/*IntegrationTest*'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
     }
 }
 

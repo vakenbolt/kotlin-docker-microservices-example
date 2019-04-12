@@ -10,11 +10,13 @@ import io.samuelagesilas.nbafinals.core.fail
 import io.vertx.core.Handler
 import io.vertx.ext.web.RoutingContext
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.params.SetParams
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
+import javax.crypto.SecretKey
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,18 +26,26 @@ data class Jwt(val token: String, val userId: Long)
 class JwtModule : AbstractModule() {
     @Provides
     @Singleton
-    fun providesJwtAuthenticationHandler(serverConfig: ServerConfig, redis: Jedis): JwtAuthentication {
+    fun providesJwtAuthenticationHandler(serverConfig: ServerConfig, redis: Jedis): AuthenticationHandler {
         return JwtAuthentication(serverConfig, redis)
     }
 }
 
 
+interface AuthenticationHandler : Handler<RoutingContext> {
+    val logger: Logger?
+    val secretKey: SecretKey
+    fun createJwt(userId: Long): Jwt
+    fun whiteListToken(jwt: Jwt)
+    fun isTokenWhiteListed(jwtSubject: String): Boolean
+}
+
 class JwtAuthentication @Inject constructor(private val serverConfig: ServerConfig,
-                                            private val redis: Jedis) : Handler<RoutingContext> {
+                                            private val redis: Jedis) : AuthenticationHandler {
 
-    private val logger = LogManager.getLogger(JwtAuthentication::class.java)
+    override val logger = LogManager.getLogger(JwtAuthentication::class.java)
 
-    private val secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(serverConfig.jwtKey))!!
+    override val secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(serverConfig.jwtKey))!!
 
     override fun handle(ctx: RoutingContext) {
 
@@ -55,7 +65,7 @@ class JwtAuthentication @Inject constructor(private val serverConfig: ServerConf
         }
     }
 
-    fun createJwt(userId: Long): Jwt {
+    override fun createJwt(userId: Long): Jwt {
         val expirationInstant = Instant.now().plus(serverConfig.jwt_expiration_time_seconds.toLong(), ChronoUnit.SECONDS)
         val jwt = Jwts.builder()
                 .setSubject(userId.toString())
@@ -64,14 +74,14 @@ class JwtAuthentication @Inject constructor(private val serverConfig: ServerConf
         return Jwt(jwt, userId)
     }
 
-    fun whiteListToken(jwt: Jwt) {
+    override fun whiteListToken(jwt: Jwt) {
         redis.use { redis ->
             val key: String = "user:${jwt.userId}"
             redis.set(key, jwt.token, SetParams().ex(serverConfig.jwt_expiration_time_seconds).nx())
         }
     }
 
-    fun isTokenWhiteListed(jwtSubject: String): Boolean {
+    override fun isTokenWhiteListed(jwtSubject: String): Boolean {
         return redis.use { redis ->
             redis.get("user:${jwtSubject.toLong()}")
         }.let { result -> result != null }
