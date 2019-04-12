@@ -191,13 +191,16 @@ Dependency injection is provided via the Google Guice library. There is only one
 
 Module | Description
 ------------ | ------------
-DaoModule | Provides JDBI data access objects.
+ApplicationLifeCycleModule | Provides a mechanism to start the server and adds the shutdown hooks defined in the `ShutdownHookModule`
+CryptoModule | Adds support for password hashing through [SCrypt](https://github.com/wg/scrypt)
+DaoModule | Provides [JDBI](http://jdbi.org/) data access objects.
 EndpointsModule | Provides all of the Endpoint Handlers.
-HikariModule | Provides HikarCP database connection pool.
-HttpServerModule | Provides Vertx HTTP Server.
-JacksonModule | Provides Jackson's `ObjectMapper` for serializing/de-serializing JSON objects.
+HikariModule | Provides [HikarCP](https://github.com/brettwooldridge/HikariCP) database connection pool.
+HttpServerModule | Provides [Vertx](https://vertx.io/) HTTP Server.
+JacksonModule | Provides [Jackson](https://github.com/FasterXML/jackson-module-kotlin) for `ObjectMapper` for serializing/de-serializing JSON objects.
 JdbiModule | Provides JDBI with SqlObject and Kotlin native support.
 JwtModule | Provides the `JwtAuthentication` class used to handle JWT authentication.
 LocalizationModule | Provides localization support
-RedisModule | Provides Redis connectivity via the `Jedis` library
+RedisModule | Provides [Redis](https://redis.io/) connectivity via the [`Jedis`](https://github.com/xetorthio/jedis) library
 ServerConfigModule | Provides the `ServerConfig` class.
+ShutdownHookModule | Provides a mechanism for cleanly shutting down the server and all associated connections.
