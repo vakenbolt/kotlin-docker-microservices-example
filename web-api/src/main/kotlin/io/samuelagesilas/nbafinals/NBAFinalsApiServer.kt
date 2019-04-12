@@ -1,7 +1,6 @@
 package io.samuelagesilas.nbafinals
 
 import com.google.inject.Guice
-import io.samuelagesilas.nbafinals.core.ApplicationLifeCycleModule
 import io.samuelagesilas.nbafinals.core.SystemEnvironment
 import io.samuelagesilas.nbafinals.modules.*
 
@@ -19,7 +18,7 @@ fun main() {
                          LocalizationModule(),
                          RedisModule(),
                          ServerConfigModule(configFileLocation = SystemEnvironment.getServerConfigPath()))
-            .getInstance(ApplicationLifeCycleModule::class.java)
+            .getInstance(ApplicationLifeCycle::class.java)
             .start()
 }
 

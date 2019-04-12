@@ -28,7 +28,8 @@ data class ServerConfig(val port: Int,
                         val jwtKey: String,
                         val jwt_expiration_time_seconds: Int,
                         val redisHost: String,
-                        val redisPort: Int)
+                        val redisPort: Int,
+                        val shutdownTimeoutSeconds: Long)
 
 data class MySqlConfig(val cachePrepStmts: Boolean,
                        val verifyServerCertificate: Boolean,
