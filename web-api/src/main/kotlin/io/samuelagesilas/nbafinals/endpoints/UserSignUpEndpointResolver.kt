@@ -8,6 +8,7 @@ import io.samuelagesilas.nbafinals.core.check
 import io.samuelagesilas.nbafinals.dao.User
 import io.samuelagesilas.nbafinals.dao.UsersDAO
 import io.samuelagesilas.nbafinals.modules.JwtAuthentication
+import io.samuelagesilas.nbafinals.modules.PasswordHasher
 import org.apache.logging.log4j.LogManager
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException
 import java.sql.SQLIntegrityConstraintViolationException
@@ -27,17 +28,18 @@ data class UserSignUpRequest(@get: NotNull
                              @get: Size(min = 8, max = 100)
                              val password: String)
 
-class UserSignUpEndpointResolver @Inject constructor(private val jwtAuthentication: JwtAuthentication,
-                                                     private val usersDao: UsersDAO,
+class UserSignUpEndpointResolver @Inject constructor(private val usersDao: UsersDAO,
+                                                     private val hasher: PasswordHasher,
+                                                     private val jwtAuthentication: JwtAuthentication,
                                                      private val apiException: ApiExceptionFactory) {
 
     val logger = LogManager.getLogger(UserSignUpEndpointResolver::class.java)
 
-    fun signUpUser(username: String, passwordHash: String, locale: Locale): ResolverResponse<AuthenticationResponse> {
+    fun signUpUser(username: String, password: String, locale: Locale): ResolverResponse<AuthenticationResponse> {
         var updateCount = 0
         var user: User? = null
         try {
-            updateCount = usersDao.insertUser(username, passwordHash)
+            updateCount = usersDao.insertUser(username, hasher.hashPassword(password))
             user = usersDao.selectUserByUsername(username)
 
         } catch (e: UnableToExecuteStatementException) {

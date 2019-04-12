@@ -7,7 +7,8 @@ import io.samuelagesilas.nbafinals.modules.*
 
 
 fun main() {
-    val injector = Guice.createInjector(DaoModule(),
+    val injector = Guice.createInjector(CryptoModule(),
+                                        DaoModule(),
                                         EndpointsModule(),
                                         HikariModule(),
                                         HttpServerModule(),
