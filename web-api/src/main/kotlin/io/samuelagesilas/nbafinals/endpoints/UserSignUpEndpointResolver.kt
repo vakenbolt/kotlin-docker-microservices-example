@@ -7,7 +7,6 @@ import io.samuelagesilas.nbafinals.dao.UsersDAO
 import io.samuelagesilas.nbafinals.modules.AuthenticationHandler
 import io.samuelagesilas.nbafinals.modules.PasswordHasher
 import org.apache.logging.log4j.LogManager
-import org.jdbi.v3.core.statement.UnableToExecuteStatementException
 import java.sql.SQLException
 import java.sql.SQLIntegrityConstraintViolationException
 import java.util.*
