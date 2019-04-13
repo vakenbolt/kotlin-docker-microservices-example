@@ -220,4 +220,3 @@ JwtModule | Provides the `JwtAuthentication` class used to handle JWT authentica
 LocalizationModule | Provides localization support
 RedisModule | Provides [Redis](https://redis.io/) connectivity via the [`Jedis`](https://github.com/xetorthio/jedis) library
 ServerConfigModule | Provides the `ServerConfig` class.
-ShutdownHookModule | Provides a mechanism for cleanly shutting down the server and all associated connections.
