@@ -13,6 +13,7 @@ A Vertx microservice that provides the winning team statistics for the NBA Final
 - [Development Environment](#dev_env)
 - [JWT HMAC Key Generator Module](#jwt_hmac)
 - [CURLing the API Server](#curl_api)
+- [Architecture](#architecture)
 
 <a name="requirements"/>
 
@@ -163,6 +164,8 @@ curl -i http://localhost:8080/healthCheck
 HTTP/1.1 200 OK
 content-length: 0
 ```
+
+<a name="architecture"/>
 
 ### Architecture:
 
