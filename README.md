@@ -208,15 +208,15 @@ Dependency injection is provided via the Google Guice library. There is only one
 
 Module | Description
 ------------ | ------------
-ApplicationLifeCycleModule | Provides a mechanism to start the server and adds the shutdown hooks defined in the `ShutdownHookModule`
-CryptoModule | Adds support for password hashing through [SCrypt](https://github.com/wg/scrypt)
-DaoModule | Provides [JDBI](http://jdbi.org/) data access objects.
-EndpointsModule | Provides all of the Endpoint Handlers.
-HikariModule | Provides [HikarCP](https://github.com/brettwooldridge/HikariCP) database connection pool.
-HttpServerModule | Provides [Vertx](https://vertx.io/) HTTP Server.
-JacksonModule | Provides [Jackson](https://github.com/FasterXML/jackson-module-kotlin) for `ObjectMapper` for serializing/de-serializing JSON objects.
-JdbiModule | Provides JDBI with SqlObject and Kotlin native support.
-JwtModule | Provides the `JwtAuthentication` class used to handle JWT authentication.
-LocalizationModule | Provides localization support
-RedisModule | Provides [Redis](https://redis.io/) connectivity via the [`Jedis`](https://github.com/xetorthio/jedis) library
-ServerConfigModule | Provides the `ServerConfig` class.
+[ApplicationLifeCycleModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/ApplicationLifeCycleModule.kt) | Provides a mechanism to start the server and adds the shutdown hooks defined in the `ShutdownHookModule`
+[CryptoModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/CryptoModule.kt) | Adds support for password hashing through [SCrypt](https://github.com/wg/scrypt)
+[DaoModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/DaoModule.kt) | Provides [JDBI](http://jdbi.org/) data access objects.
+[EndpointsModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/EndpointsModule.kt) | Provides all of the Endpoint Handlers.
+[HikariModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/HikariModule.kt) | Provides [HikarCP](https://github.com/brettwooldridge/HikariCP) database connection pool.
+[HttpServerModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/HttpServerModule.kt) | Provides [Vertx](https://vertx.io/) HTTP Server.
+[JacksonModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/JacksonModule.kt) | Provides [Jackson](https://github.com/FasterXML/jackson-module-kotlin) for `ObjectMapper` for serializing/de-serializing JSON objects.
+[JdbiModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/JdbiModule.kt) | Provides JDBI with SqlObject and Kotlin native support.
+[JwtModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/JwtModule.kt) | Provides the `JwtAuthentication` class used to handle JWT authentication.
+[LocalizationModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/LocalizationModule.kt) | Provides localization support
+[RedisModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/RedisModule.kt) | Provides [Redis](https://redis.io/) connectivity via the [`Jedis`](https://github.com/xetorthio/jedis) library
+[ServerConfigModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/ServerConfigModule.kt) | Provides the `ServerConfig` class.
