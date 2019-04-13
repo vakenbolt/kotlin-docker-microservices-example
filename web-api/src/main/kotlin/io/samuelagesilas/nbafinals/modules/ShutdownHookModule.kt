@@ -34,11 +34,11 @@ class ApiServerShutdown(private val verticle: NBAFinalsApiVerticle,
 }
 
 
-class HikariShutdown(private val dataSource: HikariDataSource) : Thread("hikari-shutdown-hook") {
+class HikariShutdown(dataSource: HikariDataSource) {
 
     private val logger = LogManager.getLogger(HikariShutdown::class.java)
 
-    override fun run() {
+    init {
         logger.info("Shutting down Hikari Connection Pool")
         dataSource.close()
     }
@@ -46,11 +46,11 @@ class HikariShutdown(private val dataSource: HikariDataSource) : Thread("hikari-
 
 
 
-class RedisShutdown(private val redis: Jedis) : Thread("redis-shutdown-hook") {
+class RedisShutdown(redis: Jedis) : Thread("redis-shutdown-hook") {
 
     private val logger = LogManager.getLogger(RedisShutdown::class.java)
 
-    override fun run() {
+    init {
         logger.info("Shutting down Redis")
         redis.close()
     }
