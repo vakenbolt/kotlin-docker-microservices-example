@@ -23,9 +23,7 @@ class ApplicationLifeCycle @Inject constructor(private val vertx: Vertx,
 
     private val shutdownHook = object : Thread() {
         override fun run() {
-            val t = ApiServerShutdown(verticle, vertx)
-            t.start()
-            t.join()
+            with(ApiServerShutdown(verticle, vertx), ::runAndWait)
             HikariShutdown(dataSource)
             RedisShutdown(redis)
         }
