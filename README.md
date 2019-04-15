@@ -208,7 +208,7 @@ Dependency injection is provided via the Google Guice library. There is only one
 
 Module | Description
 ------------ | ------------
-[ApplicationLifeCycleModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/ApplicationLifeCycleModule.kt) | Provides a mechanism to start the server and adds the shutdown hooks defined in the `ShutdownHookModule`
+[ApplicationLifeCycleModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/ApplicationLifeCycleModule.kt) | Provides a mechanism to start the server and adds shutdown hooks.
 [CryptoModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/CryptoModule.kt) | Adds support for password hashing through [SCrypt](https://github.com/wg/scrypt)
 [DaoModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/DaoModule.kt) | Provides [JDBI](http://jdbi.org/) data access objects.
 [EndpointsModule](web-api/src/main/kotlin/io/samuelagesilas/nbafinals/modules/EndpointsModule.kt) | Provides all of the Endpoint Handlers.
