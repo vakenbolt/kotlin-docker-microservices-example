@@ -37,7 +37,7 @@ interface AuthenticationHandler : Handler<RoutingContext> {
     val secretKey: SecretKey
     fun createJwt(userId: Long): Jwt
     fun whiteListToken(jwt: Jwt)
-    fun isTokenWhiteListed(jwtSubject: String): Boolean
+    fun isTokenWhiteListed(jwtSubject: String, token: String): Boolean
 }
 
 class JwtAuthentication @Inject constructor(private val serverConfig: ServerConfig,
@@ -56,7 +56,7 @@ class JwtAuthentication @Inject constructor(private val serverConfig: ServerConf
             try {
                 val token = authorizationHeader.replace("Bearer ", "").trim()
                 val jwtSubject = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
-                if (!isTokenWhiteListed(jwtSubject)) throw WhiteListAuthenticationException()
+                if (!isTokenWhiteListed(jwtSubject, token)) throw WhiteListAuthenticationException()
                 ctx.put(AUTHENTICATED_JWT_SUBJECT, jwtSubject).next()
             } catch (e: Exception) {
                 logger.error(e)
@@ -76,15 +76,15 @@ class JwtAuthentication @Inject constructor(private val serverConfig: ServerConf
 
     override fun whiteListToken(jwt: Jwt) {
         redis.use { redis ->
-            val key: String = "user:${jwt.userId}"
+            val key = "user:${jwt.userId}"
             redis.set(key, jwt.token, SetParams().ex(serverConfig.jwt_expiration_time_seconds).nx())
         }
     }
 
-    override fun isTokenWhiteListed(jwtSubject: String): Boolean {
+    override fun isTokenWhiteListed(jwtSubject: String, token: String): Boolean {
         return redis.use { redis ->
-            redis.get("user:${jwtSubject.toLong()}")
-        }.let { result -> result != null }
+            with (redis.get("user:${jwtSubject.toLong()}")) { !(this.isNullOrBlank() || this != token) }
+        }
     }
 }
 
